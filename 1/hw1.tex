@@ -61,19 +61,26 @@ Don't be afraid to introduce notation! I recommend to let $n$ denote the number 
 Take some other letters for the number of bits in $b$ and so on.
 \solution
 \begin{proof}
-According to the Lemma, if \(a \) and \(b \) have at most \(n\) bits, \( \gcd(a, b) \) will take \( n \) iterations.
+	
+We prove it by induction.
 
-There exist a \( k \), satisfying that \(a \leq F_{k + 2} \) and \(b \leq F_{k + 1} \), then \( r = a \% b \leq a - b = F_{k} \)
+When \(n = 1\), it is right by check all cases.
 
-Hence, then the Complexity of the algorithm are as follows:
+Assume that we have proved it for all \(1 \leq n < k \), next we'll prove it for \( n=k\). By induction hypothesis, at least one of the two numbers has \(n \) bits. So we assume that the other number has \(m \) bits and we use \(T(k)\) as the complexity of the algorithm in the case of \(n=k\).
+
+According to the conclusion we proved in Exercise 3.
 
 \[
 	\begin{split}
-		\sum_{i = 1}^k \log(F_{i+1})(\log(F_{i + 2}) - \log(F_{i + 1})) &= \sum_{i=1}^k (i + 1)\log(\varphi)^2 \\
-		&= O(k^2) \\
-		&= O(n^2)
+		T(k) &= O(m(k - m)) + T(m) \\
+		&= O(m(k-m) + m^2)
 	\end{split}
 \]
+
+\( m(k - m) + m^2 = O(k^2)\) for all \(m\) satisfying \(1 \leq m \leq k\).
+
+Hence, the complexity of the algorithm is \(O(n^2)\).
+
 \end{proof}
 \end{problem}
 \section*{Computing the Binomial Coefficient}
