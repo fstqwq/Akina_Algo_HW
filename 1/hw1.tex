@@ -98,35 +98,36 @@ Hence, then the Complexity of the algorithm are as follows:
         algorithm? Why or why not?
     \solution
     \begin{python}
-# Recursive Algorithm for the Binomial Coefficien
-def Rec(n, k):
-    if k < 0 or k > n:
-        return 0
-    if n == 0:
-        return 1
-    return Rec(n - 1, k - 1) + Rec(n - 1, k)
+    	# Recursive Algorithm for the Binomial Coefficien
+    	def Rec(n, k):
+    	if k < 0 or k > n:
+    	return 0
+    	if n == 0:
+    	return 1
+    	return Rec(n - 1, k - 1) + Rec(n - 1, k)
     \end{python}
-
+    
     To figure out the complexity of the recursive algorithm, what important is to figure out the number of recalculations for each sub-recursion.
-
-    Notice that \( n \) always reduce by \( 1 \) at every recursion, and \( k \) always reduce by \( 1 \) or \( 2 \).
-
-    Hence sub-recursion Rec \(p, q\) will be recalculated by \( {n - i \choose k - j - n + i} \) times
-
-    \begin{lemma}
-        \({n \choose k} = O(\frac{2^n}{\sqrt{n}})\)
-    \begin{proof}
+    
+    Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \( 1 \) or \( 2 \) at each recursion.
+    
+    Hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q - n + p} \) times
+    
+    \textbf{lemma.}
+    \({n \choose k} \leq (\frac{en}{k})^k\)
+    
     TODO[finish the proof]
-    \end{proof}
-    \end{lemma}
+    
     Hence the compexity of the algorithm are as follows
-
+    
     \[
-        \begin{split}
-            \sum_{i = 0}^{n} \sum_{j = 0}^k {n - i \choose k - j - n + i} \log{i \choose j} &\leq \sum_{i=0}^{n} \sum_{j=0}^k \frac{2^{n - i}}{\sqrt{n-i}} \log(\frac{2^i}{\sqrt{i}}) \\
-            &\leq \sum_{i=0}^{n} \sum_{j=0}^k \frac{2^{n - i}}{\sqrt{n-i}} i \\
-            &\leq O(k \sqrt{n}2^n)
-        \end{split}
+	    \begin{split}
+		    \sum_{i = 0}^{n} \sum_{j = 0}^k {n - i \choose k - j - n + i} \log{i \choose j} &= \sum_{i=0}^{n-k} \sum_{j=0}^n {n - j \choose k - n + i} \log{j \choose j - i} \\
+		    &\leq \sum_{i=0}^{n-k} \sum_{j=0}^n {n - j \choose k - n + i} k\log{\frac{en}{k}} \\
+		    &= \sum_{j=0}^n 2^{n-j} k \log{\frac{en}{k}} \\
+		    &= O(2^{n}k \log{\frac{en}{k}}) \\
+		    &= O(2^{n}k \log{\frac{n}{k}})
+	    \end{split}
     \]
 \end{problem}
 
@@ -140,24 +141,24 @@ def Rec(n, k):
     Would you say your algorithm is efficient? Why or why not?
     \solution
     \begin{python}
-#
-def Dynamic(n,k):
-    f=[[1 for i in range(0,k+1)] for j in range(0,n+1)]
-    for i in range(1, n+1):
-        for j in range(1, k+1):
-            if (i <= j):
-                f[i][j] = 1
-            else:
-                f[i][j]=f[i-1][j]+f[i-1][j-1]
-    return f[n][k]
+    	# Dynamic Programming Algorithm for the Binomial Coefficien
+    	def Dynamic(n,k):
+    	f=[[1 for i in range(0,k+1)] for j in range(0,n+1)]
+    	for i in range(1, n+1):
+    	for j in range(1, k+1):
+    	if (i <= j):
+    	f[i][j] = 1
+    	else:
+    	f[i][j]=f[i-1][j]+f[i-1][j-1]
+    	return f[n][k]
     \end{python}
-
+    
     [TODO]:Add runtime list of exercise 3 and 4?
-
+    
     For calculating ${n \choose k}$, the dynamic programming algorithm runs $n \times k$ iterations.For each iteration, if f[i-1][j] and f[i-1][j-1] have at most m bits, then the running time of adding will be $O(m)$.
-
-    According to the mathematical expression of ${n \choose k}=\frac{n!}{(n-k)!k!}<n^k$, any element in f won't be longer then $klog(n)$ bits. If we take the upper bound of calculating f, which assumes every element in f is $klog(n)$ bits long, then the total running time will be $O(k^2nlogn)$
-
+    
+    According to the mathematical expression of ${n \choose k}=(\frac{en}{k})^k$, any element in f won't be longer then $k\log(\frac{en}{k})$ bits. If we take the upper bound of calculating f, which assumes every element in f is $k\log(\frac{en}{k})$ bits long, then the total running time will be $O(k^2n\log(\frac{n}{k}))$
+    
     It's a rather better algorithm than the recursive one because it only calculate every ${n \choose k}$ once.
 
 \end{problem}
