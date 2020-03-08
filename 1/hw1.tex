@@ -32,9 +32,9 @@ has complexity $O(n^2)$.
 	to run in $O( k(n-k))$ operations.
 	\solution
 	\begin{proof}
-	School method for integer division will do \( n - k \) subtractions. For each subtractions, there are  \( k \) bits involved in the arithmetic.
-		
-	Hence the complexity of the algorithm is \( O(k(n - k))\)
+	School method for integer division will do $O( n - k )$ comparisons and subtractions. For each comparisons and subtractions, there are  $O(k)$ bits involved in the arithmetic. Hence the complexity of the algorithm is \( O(k(n - k))\).
+
+	We can check our result by investigating the worst case in which the division answer like $(11\cdots1)_2$. It needs $(n - k + 1)$ fully-compared comparisons and subtractions, for each comparison it involves $k$ bits, for each subtractions it involves at most $k + 1$ bits. So the in total the bit complexity is $(n - k)(k + k + 1)$, which reaches the bound of our former result.
 
 	\end{proof}
 \end{problem}
@@ -61,21 +61,12 @@ Don't be afraid to introduce notation! I recommend to let $n$ denote the number 
 Take some other letters for the number of bits in $b$ and so on.
 \solution
 \begin{proof}
-According to the Lemma, if \(a \) and \(b \) have at most \(n\) bits, \( \gcd(a, b) \) will take \( n \) iterations.
 
-There exist a \( k \), satisfying that \(a \leq F_{k + 2} \) and \(b \leq F_{k + 1} \), then \( r = a \% b \leq a - b = F_{k} \)
+[Wrong Proof]
 
-Hence, then the Complexity of the algorithm are as follows:
-
-\[
-	\begin{split}
-		\sum_{i = 1}^k \log(F_{i+1})(\log(F_{i + 2}) - \log(F_{i + 1})) &= \sum_{i=1}^k (i + 1)\log(\varphi)^2 \\
-		&= O(k^2) \\
-		&= O(n^2)
-	\end{split}
-\]
 \end{proof}
 \end{problem}
+
 \section*{Computing the Binomial Coefficient}
 
     Next, we will investigate the binomial coefficient ${n \choose k}$, which 
@@ -119,7 +110,7 @@ def Rec(n, k):
     TODO[finish the proof]
     \end{proof}
     \end{lemma}
-    Hence the compexity of the algorithm are as follows
+    Hence the complexity of the algorithm are as follows
 
     \[
         \begin{split}
