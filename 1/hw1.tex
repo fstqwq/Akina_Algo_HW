@@ -64,7 +64,7 @@ Take some other letters for the number of bits in $b$ and so on.
 	
 We prove it by induction.
 
-When \(n = 1\), it is right by check all cases.
+When \(n = 1\), if $a = 0$ or $b = 0$, the algorithm exit immediately thus $O(1)$, else then $a = 1$ and $b = 1$ there's only a division of two $1-$bit number, it's also $O(1)$. So for $n = 1$ the assumption is true.
 
 Assume that we have proved it for all \(1 \leq n < k \), next we'll prove it for \( n=k\). By induction hypothesis, at least one of the two numbers has \(n \) bits. So we assume that the other number has \(m \) bits and we use \(T(k)\) as the complexity of the algorithm in the case of \(n=k\).
 
@@ -77,7 +77,7 @@ According to the conclusion we proved in Exercise 3.
 	\end{split}
 \]
 
-\( m(k - m) + m^2 = O(k^2)\) for all \(m\) satisfying \(1 \leq m \leq k\).
+\( O(m(k - m) + m^2) = O(k^2)\) for all \(m\) satisfying \(1 \leq m \leq k\).
 
 Hence, the complexity of the algorithm is \(O(n^2)\).
 
@@ -105,15 +105,15 @@ Hence, the complexity of the algorithm is \(O(n^2)\).
         the running time of your algorithm, in terms of $n$ and $k$? Would you say it is an efficient
         algorithm? Why or why not?
     \solution
-    \begin{python}
-    	# Recursive Algorithm for the Binomial Coefficien
-    	def Rec(n, k):
-    	if k < 0 or k > n:
-    	return 0
-    	if n == 0:
-    	return 1
-    	return Rec(n - 1, k - 1) + Rec(n - 1, k)
-    \end{python}
+\begin{python}
+# Recursive Algorithm for the Binomial Coefficien
+def Rec(n, k):
+    if k < 0 or k > n:
+        return 0
+    if n == 0:
+	    return 1
+    return Rec(n - 1, k - 1) + Rec(n - 1, k)
+\end{python}
     
     To figure out the complexity of the recursive algorithm, what important is to figure out the number of recalculations for each sub-recursion.
     
@@ -151,22 +151,24 @@ Hence, the complexity of the algorithm is \(O(n^2)\).
     in terms of $n$ and $k$?
     Would you say your algorithm is efficient? Why or why not?
     \solution
-    \begin{python}
-    	# Dynamic Programming Algorithm for the Binomial Coefficien
-    	def Dynamic(n,k):
-    	f=[[1 for i in range(0,k+1)] for j in range(0,n+1)]
-    	for i in range(1, n+1):
+\begin{python}
+# Dynamic Programming Algorithm for the Binomial Coefficien
+def DP(n,k):
+	f=[[1 for i in range(0,k+1)] for j in range(0,n+1)]
+	for i in range(1, n+1):
     	for j in range(1, k+1):
-    	if (i <= j):
-    	f[i][j] = 1
-    	else:
-    	f[i][j]=f[i-1][j]+f[i-1][j-1]
-    	return f[n][k]
-    \end{python}
+    		if (i <= j):
+    			f[i][j] = 1
+    		else:
+    			f[i][j]=f[i-1][j]+f[i-1][j-1]
+	return f[n][k]
+\end{python}
     
     [TODO]:Add runtime list of exercise 3 and 4?
     
-    For calculating ${n \choose k}$, the dynamic programming algorithm runs $n \times k$ iterations.For each iteration, if f[i-1][j] and f[i-1][j-1] have at most m bits, then the running time of adding will be $O(m)$.
+	For calculating ${n \choose k}$, the dynamic programming algorithm runs $n \times k$ iterations.
+	
+	For each iteration, if $f_{i-1,j}$ and $f_{i-1,j-1}$ have at most $m$ bits, then the running time of adding will be $O(m)$.
     
     According to the mathematical expression of ${n \choose k}=(\frac{en}{k})^k$, any element in f won't be longer then $k\log(\frac{en}{k})$ bits. If we take the upper bound of calculating f, which assumes every element in f is $k\log(\frac{en}{k})$ bits long, then the total running time will be $O(k^2n\log(\frac{n}{k}))$
     
@@ -182,31 +184,43 @@ Hence, the complexity of the algorithm is \(O(n^2)\).
   the result modulo $2$. What is the running time? Would you say this algorithm
   is efficient? Why or why not?
   \solution
-If we first calculate ${n \choose k}$ in completely the same way of exercise 4, then the running time will still be $O(k^2nlogn)$. It isn't a good algorithm because the bit-length of answer is only 1.
- 
-If we are only interested in ${n \choose k}$ mod 2, then for each f[i][j] in python code of exercise 4, we can only save and calculate the last bit. So for every iteration in exercise 4, the running time is $O(1)$ because only 1 bit calculation is done. In this case, the running time will be $O(nk)$.
+If we first calculate ${n \choose k}$ in completely the same way of the previous task and take the last bit of the answer as the answer of this task, then the running time will still be the same as previous. It can't be a good algorithm because all we care is the last bit of the answer, but we use many time to calculate the useless higher bits.
 
-However, we have a more efficient way to judge whether ${n \choose k}$ is even or odd: we only need to know whether $n \& k = k$. If $n \& k = k$, then it's odd. Else it's even. It can be proved by induction as follows:
+For a better complexity, for each $f_{i, j}$ we only concern the lowest bit, so the complexity of multiplication and addition is $\Theta(1)$ because they are equivalent to bit AND and bit OR. In this case, the total complexity is $\Theta(nk)$.
 
+However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion:  $ {n \choose k} \bmod 2 = [n \wedge k = k]$.
+\begin{proof} 
 [TODO](lyq):complete the proof.
+\end{proof}
 \end{problem}
 
 \begin{problem}{6}
     \statement
     Remember the ``period'' algorithm for computing $F'_n := (F_n \mod k)$ discussed in class:
-    (1) find some $i,j$ between $0$ and $k^2$ for which 
-    $F'_{i} =  F'_{j}$ and $F'_{i+1} = F'_{j+1} k$. 
+    Find some $i,j$ between $0$ and $k^2$ for which 
+    $F'_{i} =  F'_{j}$ and $F'_{i+1} = F'_{j+1}$. 
     Then for $d := j-i$ the sequence $F'_{n}$ will repeat every $d$ steps, as there will be a cycle.
     
     Show that a lasso cannot happen. That is, show 
     that the smallest $i$ for which this happens is $0$, i.e, for some $j$ we have
-    $F'_0 = F'_j$ and $F'_1 = F'_{j+1}$ and thus $F'_n = F'_{n \textnormal{ mod }  j}$.
+    $F'_0 = F'_j$ and $F'_1 = F'_{j+1}$ and thus $F'_n = F'_{n \text{ mod }  j}$.
     \solution
-    We prove this by contradiction.
+	\begin{proof}
+	We prove this by contradiction.
 
-    Suppose the smallest $i$ for which we have some $j$ satisfies $F'_i = F'_j$ and $F'_{i+1} = F'_{j+1}$, while $i>0$. By definition $F_{i-1}+F_i=F_{i+1}$, so $F_{i-1} \equiv  F_{i+1}-F_i(\textnormal{ mod }  k)$, and similarly $F_{j-1} \equiv  F_{j+1}-F_j(\textnormal{ mod }  k)$. Because $F_i = F_j$ and $F_{i+1} = F_{j+1}$, we have $F_{j-1} \equiv F_{i-1}(\textnormal{ mod }  k)$, then $F'_{i-1} = F'{j-1}$.
+	Suppose the smallest $i$ in some $(i, j)$ where $i < j$ that satisfies the above condition is greater than $0$.
+	By definition of fibonacci number,
+	$$F_{i-1} \equiv  F_{i+1}-F_i(\textnormal{ mod }  k)$$
+	and similarly
+	$$F_{j-1} \equiv  F_{j+1}-F_j(\textnormal{ mod }  k)$$
+	
+	Because $F_i = F_j$ and $F_{i+1} = F_{j+1}$, we have 
+	$$F_{j-1} \equiv F_{i-1}(\textnormal{ mod }  k)$$
+	and equivalently
+	$$F'_{i-1} = F'_{j-1}$$
 
-    Because $i-1$ and $j-1$ also satisfies $F'_{i-1} = F'_{j-1}$ and $F'_{(i-1)+1} = F'_{(j-1)+1}$, $i$ isn't the smallest natural number satisfying the conditions, which leads to a contradiction. And since pigeon-hole principle ensures the existence of cycle or lasso, then it can only be a cycle, i.e. for some $j$ we have $F'_0 = F'_j$ and $F'_1 = F'_{j + 1}$ thus $F'_n = F' _{n \mod j}$. So we prove that the smallest $i$ satisfying the conditions is $0$.
+	We take $i^\prime = i - 1, j^\prime = j - 1$, then $(i^\prime, j ^ \prime)$ satisfies the preset condition. Notice that $i^\prime < i$, thus this leads to contradiction.
+	\end{proof}
 \end{problem}
 
 \end{document}
