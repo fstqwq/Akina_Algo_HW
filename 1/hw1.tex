@@ -117,9 +117,7 @@ def Rec(n, k):
     
     To figure out the complexity of the recursive algorithm, what important is to figure out the number of recalculations for each sub-recursion.
     
-    Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \(0\) or remain its value at each recursion.
-    
-    Hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q} \) times
+    Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \(0\) or remain its value at each recursion, hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q} \) times.
     
 	\begin{lemma}
 		\({n \choose k} \leq (\frac{en}{k})^k\)
