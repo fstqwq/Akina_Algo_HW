@@ -208,7 +208,6 @@ If we first calculate ${n \choose k}$ in completely the same way of the previous
 For a better complexity, for each $f_{i, j}$ we only concern the lowest bit, so the complexity of multiplication and addition is $\Theta(1)$ because they are equivalent to bit AND and bit OR. In this case, the total complexity is $\Theta(nk)$.
 
 However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion:  $ {n \choose k} \bmod 2 = [n \wedge k = k]$.
-
 	\begin{proof}
 		According to the Lucas' Theorem, 
 		
@@ -239,25 +238,35 @@ However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion:  $ {n \ch
 			\end{split}
 		\]		
     \end{proof}
-
 \end{problem}
 
 \begin{problem}{6}
     \statement
     Remember the ``period'' algorithm for computing $F'_n := (F_n \mod k)$ discussed in class:
-    (1) find some $i,j$ between $0$ and $k^2$ for which 
-    $F'_{i} =  F'_{j}$ and $F'_{i+1} = F'_{j+1} k$. 
+    Find some $i,j$ between $0$ and $k^2$ for which 
+    $F'_{i} =  F'_{j}$ and $F'_{i+1} = F'_{j+1}$. 
     Then for $d := j-i$ the sequence $F'_{n}$ will repeat every $d$ steps, as there will be a cycle.
     
     Show that a lasso cannot happen. That is, show 
     that the smallest $i$ for which this happens is $0$, i.e, for some $j$ we have
-    $F'_0 = F'_j$ and $F'_1 = F'_{j+1}$ and thus $F'_n = F'_{n \textnormal{ mod }  j}$.
+    $F'_0 = F'_j$ and $F'_1 = F'_{j+1}$ and thus $F'_n = F'_{n \text{ mod }  j}$.
     \solution
-    We prove this by contradiction.
+	\begin{proof}
+	We prove this by contradiction.
 
-    Suppose the smallest $i$ for which we have some $j$ satisfies $F'_i = F'_j$ and $F'_{i+1} = F'_{j+1}$, while $i>0$. By definition $F_{i-1}+F_i=F_{i+1}$, so $F_{i-1} \equiv  F_{i+1}-F_i(\textnormal{ mod }  k)$, and similarly $F_{j-1} \equiv  F_{j+1}-F_j(\textnormal{ mod }  k)$. Because $F_i = F_j$ and $F_{i+1} = F_{j+1}$, we have $F_{j-1} \equiv F_{i-1}(\textnormal{ mod }  k)$, then $F'_{i-1} = F'{j-1}$.
+	Suppose the smallest $i$ in some $(i, j)$ where $i < j$ that satisfies the above condition is greater than $0$.
+	By definition of fibonacci number,
+	$$F_{i-1} \equiv  F_{i+1}-F_i(\textnormal{ mod }  k)$$
+	and similarly
+	$$F_{j-1} \equiv  F_{j+1}-F_j(\textnormal{ mod }  k)$$
+	
+	Because $F_i = F_j$ and $F_{i+1} = F_{j+1}$, we have 
+	$$F_{j-1} \equiv F_{i-1}(\textnormal{ mod }  k)$$
+	and equivalently
+	$$F'_{i-1} = F'_{j-1}$$
 
-    Because $i-1$ and $j-1$ also satisfies $F'_{i-1} = F'_{j-1}$ and $F'_{(i-1)+1} = F'_{(j-1)+1}$, $i$ isn't the smallest natural number satisfying the conditions, which leads to a contradiction. And since pigeon-hole principle ensures the existence of cycle or lasso, then it can only be a cycle, i.e. for some $j$ we have $F'_0 = F'_j$ and $F'_1 = F'_{j + 1}$ thus $F'_n = F' _{n \mod j}$. So we prove that the smallest $i$ satisfying the conditions is $0$.
+	We take $i^\prime = i - 1, j^\prime = j - 1$, then $(i^\prime, j ^ \prime)$ satisfies the preset condition. Notice that $i^\prime < i$, thus this leads to contradiction.
+	\end{proof}
 \end{problem}
 
 \end{document}
