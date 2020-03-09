@@ -117,9 +117,9 @@ def Rec(n, k):
     
     To figure out the complexity of the recursive algorithm, what important is to figure out the number of recalculations for each sub-recursion.
     
-    Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \( 1 \) or \( 2 \) at each recursion.
+    Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \(0\) or remain its value at each recursion.
     
-    Hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q - n + p} \) times
+    Hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q} \) times
     
 	\begin{lemma}
 		\({n \choose k} \leq (\frac{en}{k})^k\)
@@ -152,9 +152,8 @@ def Rec(n, k):
 
     \[
 	    \begin{split}
-		    \sum_{i = 0}^{n} \sum_{j = 0}^k {n - i \choose k - j - n + i} \log{i \choose j} &= \sum_{i=0}^{n-k} \sum_{j=0}^n {n - j \choose k - n + i} \log{j \choose j - i} \\
-		    &\leq \sum_{i=0}^{n-k} \sum_{j=0}^n {n - j \choose k - n + i} k\log{\frac{en}{k}} \\
-		    &= \sum_{j=0}^n 2^{n-j} k \log{\frac{en}{k}} \\
+		    \sum_{i = 0}^{n} \sum_{j = 0}^{k} {n - i \choose k - j} \log{i \choose j}  &\leq \sum_{i = 0}^{n} \sum_{j = 0}^{k}  {n - i \choose k - j} k\log{\frac{en}{k}} \\
+		    &= \sum_{i=0}^n 2^{n-i} k \log{\frac{en}{k}} \\
 		    &= O(2^{n}k \log{\frac{en}{k}}) \\
 		    &= O(2^{n}k \log{\frac{n}{k}})
 	    \end{split}
