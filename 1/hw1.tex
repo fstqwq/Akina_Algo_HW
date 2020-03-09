@@ -208,9 +208,36 @@ If we first calculate ${n \choose k}$ in completely the same way of the previous
 For a better complexity, for each $f_{i, j}$ we only concern the lowest bit, so the complexity of multiplication and addition is $\Theta(1)$ because they are equivalent to bit AND and bit OR. In this case, the total complexity is $\Theta(nk)$.
 
 However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion:  $ {n \choose k} \bmod 2 = [n \wedge k = k]$.
-\begin{proof} 
-[TODO](lyq):complete the proof.
-\end{proof}
+	\begin{proof}
+		According to the Lucas' Theorem, 
+		
+		\[
+			{n \choose k}\equiv{{n \bmod p} \choose {k \bmod p}}{{ \lfloor n/p\rfloor} \choose { \lfloor k/p\rfloor}}(\bmod p)
+		\]
+		
+		For $p=2$ and $n=(a_u....a_2a_1)_2$, $k=(b_v....b_2b_1)_2$, we apply Lucas' Theorem. Note that because $k\leq n$, we have $v\leq u$.
+		
+		\[
+			\begin{split}
+			{n \choose k} &\equiv {(a_u....a_2)_2 \choose (b_v....b_2)_2}{a_1 \choose b_1}\\
+			&\equiv {(a_u....a_3)_2 \choose (b_v....b_3)_2}{a_2 \choose b_2}{a_1 \choose b_1}\\
+			&\equiv ...\\
+			&\equiv {(a_u....a_v+1)_2 \choose 0}{a_v \choose b_v}...{a_1 \choose b_1}\\
+			&\equiv {a_v \choose b_v}...{a_1 \choose b_1}(\bmod 2)
+			\end{split}
+		\]
+		
+		Because $a_i,b_i\in \{0,1\}$ and ${0 \choose 0}={0 \choose 1}={1 \choose 1}=1$, ${0 \choose 1}=0$, we have:
+		
+		\[
+			\begin{split}
+			{n \choose k} \bmod 2 = 1 &\Leftrightarrow {a_v \choose b_v}...{a_1 \choose b_1}\bmod 2=1 \\
+			&\Leftrightarrow \forall 1\leq i\ \leq v {a_i \choose b_i}=1\\
+			&\Leftrightarrow \forall 1\leq i\ \leq v b_i=1\rightarrow a_i=1\\
+			&\Leftrightarrow n \wedge k = k
+			\end{split}
+		\]		
+    \end{proof}
 \end{problem}
 
 \begin{problem}{6}
