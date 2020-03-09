@@ -124,9 +124,28 @@ def Rec(n, k):
 	\begin{lemma}
 		\({n \choose k} \leq (\frac{en}{k})^k\)
 	\begin{proof}
-	
-    
-    TODO[finish the proof]
+		Considering the taylor expansion of \(e^x\) for \(x = k\)
+		
+		\[
+			e^k = \sum_{i=0}^{\infty} \frac{k^i}{i!}
+		\]
+		
+		We just pick the term with respect to \(k\), then we directly get 
+		
+		\[
+			e^k \leq \frac{k^i}{k!} \Rightarrow \frac{1}{k!} \leq (\frac{e}{k})^k
+		\]
+		
+		Hence,
+		
+		\[
+			\begin{split}
+				{n \choose k} &= \frac{n(n-1)\dots(n-k+1)}{k!} \\
+				&\leq \frac{n^k}{k!} \\
+				&\leq (\frac{en}{k})^k
+			\end{split}
+		\]
+		
     \end{proof}
     \end{lemma}
     Hence the complexity of the algorithm are as follows
