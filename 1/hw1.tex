@@ -274,7 +274,7 @@ However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion:  $ {n \ch
 			{n \choose k} &\equiv {(a_u....a_2)_2 \choose (b_v....b_2)_2}{a_1 \choose b_1}\\
 			&\equiv {(a_u....a_3)_2 \choose (b_v....b_3)_2}{a_2 \choose b_2}{a_1 \choose b_1} \\
 			&\equiv ...\\	
-			&\equiv {(a_u....a_v+1)_2 \choose 0}{a_v \choose b_v}...{a_1 \choose b_1}\mod 2\\
+			&\equiv {(a_u....a_{v+1})_2 \choose 0}{a_v \choose b_v}...{a_1 \choose b_1}\mod 2\\
 			&\equiv {a_v \choose b_v}...{a_1 \choose b_1}\mod 2
 		\end{align*}		
 		Because $a_i,b_i\in \{0,1\}$ and ${0 \choose 0}={0 \choose 1}={1 \choose 1}=1$, ${0 \choose 1}=0$, we have:
