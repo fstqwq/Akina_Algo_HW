@@ -52,14 +52,14 @@ w = np.array([])
 for i in range(len(ret)):
     x = np.append(x, ret[i][0])
     y = np.append(y, ret[i][1] * 5.5e7)
-    z = np.append(z, pow(2, 2 * x[i]) * x[i] * math.log(2))
+    z = np.append(z, pow(1.855, 2 * x[i]) * x[i] * math.log(2) * 8)
     w = np.append(w, calc(2 * x[i], x[i]) * 45) 
 
 
 for i in range(len(x)):
-    y[i] = math.log(y[i])
-    z[i] = math.log(z[i])
-    w[i] = math.log(w[i])
+    y[i] = y[i]
+    z[i] = z[i]
+    w[i] = w[i]
 '''
 Sum = np.concatenate((x, y, z, w))
 Sum = pd.Series(Sum)

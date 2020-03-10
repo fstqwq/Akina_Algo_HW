@@ -118,7 +118,9 @@ def Rec(n, k):
     To figure out the complexity of the recursive algorithm, what important is to figure out the number of recalculations for each sub-recursion.
     
     Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \(0\) or remain its value at each recursion, hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q} \) times.
-    
+	
+	For now on, we assume that $k \leq \frac n 2$, otherwise it's equivalent to calculate ${n \choose n - k}$ which has the same answer to it.
+
 	\begin{lemma}
 		\({n \choose k} \leq (\frac{en}{k})^k\)
 	\begin{proof}
