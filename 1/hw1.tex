@@ -271,8 +271,8 @@ However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion:  $ {n \ch
 		
 		For $p=2$ and $n=(a_u....a_2a_1)_2$, $k=(b_v....b_2b_1)_2$, we can apply Lucas' Theorem on it $v$ times, that is
 		\begin{align*}
-			{n \choose k} &\equiv {(a_u....a_2)_2 \choose (b_v....b_2)_2}{a_1 \choose b_1}\\
-			&\equiv {(a_u....a_3)_2 \choose (b_v....b_3)_2}{a_2 \choose b_2}{a_1 \choose b_1} \\
+			{n \choose k} &\equiv {(a_u....a_2)_2 \choose (b_v....b_2)_2}{a_1 \choose b_1}\mod 2\\
+			&\equiv {(a_u....a_3)_2 \choose (b_v....b_3)_2}{a_2 \choose b_2}{a_1 \choose b_1}\mod 2 \\
 			&\equiv ...\\	
 			&\equiv {(a_u....a_{v+1})_2 \choose 0}{a_v \choose b_v}...{a_1 \choose b_1}\mod 2\\
 			&\equiv {a_v \choose b_v}...{a_1 \choose b_1}\mod 2
