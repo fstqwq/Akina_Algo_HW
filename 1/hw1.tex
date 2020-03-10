@@ -106,7 +106,7 @@ Hence, the complexity of the algorithm is \(O(n^2)\).
         algorithm? Why or why not?
     \solution
 \begin{python}
-# Recursive Algorithm for the Binomial Coefficien
+# Recursive Algorithm for the Binomial Coefficient
 def Rec(n, k):
     if k < 0 or k > n:
         return 0
@@ -117,7 +117,7 @@ def Rec(n, k):
     
     To figure out the complexity of the recursive algorithm, what important is to figure out the number of recalculations for each sub-recursion.
     
-    Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \(0\) or remain its value at each recursion, hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q} \) times.
+    Notice that \( n \) always reduce by \( 1 \), and \( k \) always reduce by \(1\) or remain its value at each recursion, hence sub-recursion Rec \( (p, q) \) will be recalculated \( {n - p \choose k - q} \) times.
     
 	\begin{lemma}
 		\({n \choose k} \leq (\frac{en}{k})^k\)
@@ -131,7 +131,7 @@ def Rec(n, k):
 		We just pick the term with respect to \(k\), then we directly get 
 		
 		\[
-			e^k \leq \frac{k^i}{k!} \Rightarrow \frac{1}{k!} \leq (\frac{e}{k})^k
+			e^k \geq \frac{k^k}{k!} \Rightarrow \frac{1}{k!} \leq (\frac{e}{k})^k
 		\]
 		
 		Hence,
