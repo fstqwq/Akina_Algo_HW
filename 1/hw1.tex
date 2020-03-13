@@ -5,7 +5,7 @@
 \usepackage{hw}
 \usepackage{pythonhighlight}
 
-\renewcommand{\hwtitle} {CS217 Homework 1}
+\renewcommand{\hwtitle} {CS217 Homework 1}	
 \renewcommand{\hwauthor}{Akina}
 \renewcommand{\hwdate}{\today}
 
@@ -34,7 +34,12 @@ has complexity $O(n^2)$.
 	\begin{proof}
 	School method for integer division will do $O( n - k )$ comparisons and subtractions. For each comparisons and subtractions, there are  $O(k)$ bits involved in the arithmetic. Hence the complexity of the algorithm is \( O(k(n - k))\).
 
-	We can check our result by investigating the worst case in which the division answer like $(11\cdots1)_2$. It needs $(n - k + 1)$ fully-compared comparisons and subtractions, for each comparison it involves $k$ bits, for each subtractions it involves at most $k + 1$ bits. So the in total the bit complexity is $(n - k)(k + k + 1)$, which reaches the bound of our former result.
+	We can check our result by investigating the worst case in which the quotient is $2 ^ {n - k} - 1$ and divisor is $2 ^ k - 1$, 
+	where dividend is an at least $n - 1$ , at most $n$ bit number. 
+	Using school method to solve such division needs $(n - k)$ $k$-bit subtractions, 
+	and before each subtraction it need to access at least $2$ bits, 
+	at most $2k$ bits to compare and decide whether the subtraction should take place.
+	It's easy to determine that in this situation the complexity is $\Theta(n - k) \times \Theta(k) = \Theta(k (n - k))$, which reaches the big-$O$ bound of our former result.
 
 	\end{proof}
 \end{problem}
@@ -66,30 +71,24 @@ We prove it by induction.
 
 When \(n = 1\), if $a = 0$ or $b = 0$, the algorithm exit immediately thus $O(1)$, else then $a = 1$ and $b = 1$ there's only a division of two $1-$bit number, it's also $O(1)$. So for $n = 1$ the assumption is true.
 
-Assume that we have proved it for all \(1 \leq n < k \), next we'll prove it for \( n=k\). By induction hypothesis, at least one of the two numbers has \(n \) bits. So we assume that the other number has \(m \) bits and we use \(T(k)\) as the complexity of the algorithm in the case of \(n=k\).
+Assume that we have proved it for all \(1 \leq n < k \). For \( n=k\), without loss of generality we assume $a \leq b$ where $a$ has $m(1 \leq m \leq n)$ bits and $b$ has $n$ bits. 
 
-According to the conclusion we proved in Problem 1.
-
+Firstly we investigate the situation when $m < n$ holds. According to the conclusion we already proved in Problem 1, we have
 \[
 	\begin{split}
-		T(k) &= O(m(k - m)) + T(m) \\
-		&= O(m(k-m) + m^2)
+		T(n) &= O(m(n - m)) + T(m) \\
+		&= O(m(n-m) + m^2)
 	\end{split}
 \]
+where \( O(m(n - m) + m^2) = O(n^2)\) for all \(m\) satisfying \(1 \leq m < n\).
 
-where \( O(m(k - m) + m^2) = O(k^2)\) for all \(m\) satisfying \(1 \leq m < k\).
-
-However, the above derivation doesn't work if \(m = n\), we need to elaborate it.
-
-If \(m = n\), then \(r = n \% m = n - \lfloor \frac{n}{m} \rfloor m \leq n - m\), implies that \(r\) have at most \(n - 1\) bits.
-
-Hence
-
+Otherwise, $m = n$ holds. Note that $a \leq b < 2a$ always holds when $a, b$ are both $n$-bit number, then the division takes only $1$ $n$-bit subtraction.
+After that we have to calculate $(a, b - a)$ recursively where $(b - a)$ has at most $n - 1$ bits, which we proved to be $O(n ^ 2)$. Thus in total
 \[
-	T(k) = O(m(k - m)) + T(k - 1) = O((k-1)^2) = O(k^2)
+	T(n) = O(n) + O(n ^ 2) = O(n^2)
 \]
 
-Hence, the complexity of the algorithm is \(O(n^2)\).
+Hence the complexity of the algorithm is \(O(n^2)\).
 
 \end{proof}
 \end{problem}
@@ -143,7 +142,7 @@ def Rec(n, k):
 		We just pick the term with respect to \(k\), then we directly get 
 		
 		\[
-			e^k \geq \frac{k^k}{k!} \Rightarrow \frac{1}{k!} \leq (\frac{e}{k})^k
+			\frac{k^k}{k!} \leq e^k \Rightarrow \frac{1}{k!} \leq (\frac{e}{k})^k
 		\]
 		
 		Hence,
@@ -273,15 +272,20 @@ If we first calculate ${n \choose k}$ in completely the same way of the previous
 
 For a better complexity, for each $f_{i, j}$ we only concern the lowest bit, so the complexity of multiplication and addition is $\Theta(1)$ because they are equivalent to bit AND and bit OR. In this case, the total complexity is $\Theta(nk)$.
 
-However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion:  $ {n \choose k} \bmod 2 = [n \wedge k = k]$, where $\wedge$ is the bitwise AND operation.
+However, we have a more efficient  -- $\Theta (\log n)$ -- conclusion: 
+$$ {n \choose k} \bmod 2 = [n \wedge k = k]$$
+where $\wedge$ is the bitwise AND operation.
 	\begin{proof}
+		$n \wedge k$ can't be $k$ when $k > n$, which means the assumption holds when $k > n$.
+		All we need to concern is the situation that $0 \leq n \leq k$.
+
 		According to the Lucas' Theorem, 
 		
 		\[
 			{n \choose k}\equiv{{n \bmod p} \choose {k \bmod p}}{{ \lfloor n/p\rfloor} \choose { \lfloor k/p\rfloor}}(\bmod p)
 		\]
 		
-		For $p=2$ and $n=(a_u....a_2a_1)_2$, $k=(b_v....b_2b_1)_2$, we can apply Lucas' Theorem on it $v$ times, that is
+		For $p=2$ and $n=(a_u....a_2a_1)_2$, $k=(b_v....b_2b_1)_2$. Note that $u \geq v$ since $n \leq k$, so we can apply Lucas' Theorem on it $v$ times, that is
 		\begin{align*}
 			{n \choose k} &\equiv {(a_u....a_2)_2 \choose (b_v....b_2)_2}{a_1 \choose b_1}\mod 2\\
 			&\equiv {(a_u....a_3)_2 \choose (b_v....b_3)_2}{a_2 \choose b_2}{a_1 \choose b_1}\mod 2 \\
