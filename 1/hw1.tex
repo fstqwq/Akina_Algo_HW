@@ -68,7 +68,7 @@ When \(n = 1\), if $a = 0$ or $b = 0$, the algorithm exit immediately thus $O(1)
 
 Assume that we have proved it for all \(1 \leq n < k \), next we'll prove it for \( n=k\). By induction hypothesis, at least one of the two numbers has \(n \) bits. So we assume that the other number has \(m \) bits and we use \(T(k)\) as the complexity of the algorithm in the case of \(n=k\).
 
-According to the conclusion we proved in Exercise 3.
+According to the conclusion we proved in Problem 1.
 
 \[
 	\begin{split}
@@ -77,7 +77,17 @@ According to the conclusion we proved in Exercise 3.
 	\end{split}
 \]
 
-where \( O(m(k - m) + m^2) = O(k^2)\) for all \(m\) satisfying \(1 \leq m \leq k\).
+where \( O(m(k - m) + m^2) = O(k^2)\) for all \(m\) satisfying \(1 \leq m < k\).
+
+However, the above derivation doesn't work if \(m = n\), we need to elaborate it.
+
+If \(m = n\), then \(r = n \% m = n - \lfloor \frac{n}{m} \rfloor m \leq n - m\), implies that \(r\) have at most \(n - 1\) bits.
+
+Hence
+
+\[
+	T(k) = O(m(k - m)) + T(k - 1) = O((k-1)^2) = O(k^2)
+\]
 
 Hence, the complexity of the algorithm is \(O(n^2)\).
 
@@ -133,7 +143,7 @@ def Rec(n, k):
 		We just pick the term with respect to \(k\), then we directly get 
 		
 		\[
-			e^k \leq \frac{k^i}{k!} \Rightarrow \frac{1}{k!} \leq (\frac{e}{k})^k
+			e^k \geq \frac{k^k}{k!} \Rightarrow \frac{1}{k!} \leq (\frac{e}{k})^k
 		\]
 		
 		Hence,
