@@ -24,10 +24,9 @@
 	\solution
 	\begin{proof}
 		Consider all elements as vertices and comparisons as directed edges from larger to smaller ones, or two elements are identical. Then consider how we conclude the maximum element: there's a path from the maximum element to every other element -- it's continuous inequations that mathmatically proved the maximality.
-		The simple algorithm forms a tree finally, where everytime it compare the current root and next element, and draw an edge between them and decide the new root.
+		The simple algorithm forms a tree finally. Everytime it compare the current root and next element, and draw an edge between them and decide the new root.
 
-		If there are $n - 2$ or few edges in the graph, the graph must not be connected since an edge can only decrease the number of connected components by 1, where at beginning we have $n$ components. Thus there are at least two components, where we don't really know their relations at all.
-		Thus we can not conclude such inequation between any two vertex in different components, as well as maximum element.
+		If there are $n - 2$ or few edges in the graph, the graph must not be connected since an edge can only decrease the number of connected components by 1, but at beginning we have $n$ components. Thus there are at least two components, which we don't really know their relations at all -- we can not conclude such inequation between any two vertex in different components, as well as maximum element.
 	\end{proof}
 \end{problem}
 
