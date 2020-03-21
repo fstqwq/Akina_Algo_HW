@@ -23,10 +23,10 @@
 	on some inputs.
 	\solution
 	\begin{proof}
-		Consider all elements as vertices and comparisons as directed edges from larger to smaller ones, or two elements are identical. Then consider how we conclude the maximum element: there's a path from the maximum element to every other element -- it's continuous inequations that mathmatically proved the maximality.
-		The simple algorithm forms a tree finally. Everytime it compare the current root and next element, and draw an edge between them and decide the new root.
+		Consider all the elements as vertices and comparisons as directed edges from larger to smaller ones, or the direction of the edge is arbitrary in the case of two elements are identical. Then consider how we conclude the maximum element: there's a path from the maximum element to every other element -- it's continuous inequations that mathematically proved the maximality.
+		The simple algorithm forms a tree finally. Everytime it compares the current root and next element, adds an edge between them. Then the new root is decided according to the direction of the new edge.
 
-		If there are $n - 2$ or few edges in the graph, the graph must not be connected since an edge can only decrease the number of connected components by 1, but at beginning we have $n$ components. Thus there are at least two components, which we don't really know their relations at all -- we can not conclude such inequation between any two vertex in different components, as well as maximum element.
+		If there are $n - 2$ or fewer edges in the graph, the graph can not be connected since an edge can only decrease the number of connected components by 1. Howerver, in the beginning, we have $n$ components. What led to is that there are at least two components finally, which we don't really know their relations at all -- we can not conclude such inequation between any two vertices in different components, as well as the maximum element.
 	\end{proof}
 \end{problem}
 
@@ -50,8 +50,8 @@ def min_max(a, n):
         large.append(a[i + 1 - res])
     return (min(small), max(large))
 \end{python}
-	First part, we make pair of every two ajancent number and dividing them by the comparison result taking $\frac n 2$ comparisons.
-	Second part we decide maximum and minimum seperately, and both takes $\frac n 2 - 1$ comparisons. In total, $\frac {3} {2} n - 2$ comparisons achieved.
+	First part, we make pair of every two ajancent number(their indexes are \(2n\) and \(2n + 1\) separately) and divides them by the result of comparisons which take $\frac n 2$ times.
+	Second part we decide the maximum and minimum seperately, and both takes $\frac n 2 - 1$ comparisons(with use of the simple algorithm in Problem 1). In total, $\frac {3} {2} n - 2$ comparisons achieved.
 \end{problem}
 \begin{problem}{3}
 	\statement
