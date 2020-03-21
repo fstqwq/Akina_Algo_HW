@@ -97,19 +97,19 @@ def second_max(a, n):
 										
 		\node [vertex, fill=LightGreen] {9}
 			child {node[vertex, fill=Gold] {5}
-				child {node[vertex, fill=AliceBlue] {4}
-					child {node[vertex, fill=AliceBlue] {4}}
-					child {node[vertex, fill=AliceBlue] {1}}
+				child {node[vertex, fill=GhostWhite] {4}
+					child {node[vertex, fill=GhostWhite] {4}}
+					child {node[vertex, fill=GhostWhite] {1}}
 				}
-				child {node[vertex, fill=AliceBlue] {5}
-					child {node[vertex, fill=AliceBlue] {5}}
-					child {node[vertex, fill=AliceBlue] {4}}
+				child {node[vertex, fill=GhostWhite] {5}
+					child {node[vertex, fill=GhostWhite] {5}}
+					child {node[vertex, fill=GhostWhite] {4}}
 				}
 			}
 			child {node[vertex, fill=LightGreen] {9}
 				child {node[vertex, fill=Gold] {1}
-					child {node[vertex, fill=AliceBlue] {1}}
-					child {node[vertex, fill=AliceBlue] {1}}
+					child {node[vertex, fill=GhostWhite] {1}}
+					child {node[vertex, fill=GhostWhite] {1}}
 				}
 				child {node[vertex, fill=LightGreen] {9}
 					child {node[vertex, fill=LightGreen] {9}}
@@ -122,14 +122,13 @@ def second_max(a, n):
 	\end{figure}
 
 	Now get back and see how the maximum is elected: each root of subtree is the maximum of 
-	the nodes which is the root's descendants. Observe Figure 1, the value of root of the whole 
-	tree(i.e. node of index 1) comes from the maximum of its children. Then we get a path(the node 
-	filling in green). Second maximum is the maximum of the other leaves. We can get the value by
-	visiting the path once and comparing the sibling nodes(yellow nodes). The number 
-	of yellow nodes is the height of the tree, that is, $\log_2(n)$. We can conclude the second 
-	maximum by $\log_2(n)$ comparisons.
+	all leaves corresponding to an interval of the original sequence. The path which 
+	indicates how root is elected is marked in green, and the sibling nodes of the path are marked in yellow.
+	It's easy to show that the second maximum is maximum of yellow nodes, since the second maximum is the maximum of all elements except the maximum,
+	and the yellow node contains all infomation about the maximum of other elements.
+	The number of yellow nodes is $\log_2(n) - 1$ since the height of the tree is $\log_2{n}$, so the second step consumes $\log_2(n) - 2$ comparisons.
 
-	In total, $n + \log_2(n) - 1$ comparisons achieved.
+	In total, $n + \log_2(n) - 2$ comparisons achieved.
 \end{problem}
 
 \section*{Quickselect}
@@ -188,10 +187,10 @@ We explain by example. Here's a quicksort tree for sorting \(A = \left \{ 2, 9, 
 	
 	\node [vertex, fill=LightGreen] {\underline{2}, 9, 6, 7, 1, 10, 5, 4, 8, 3}
 		child {node[vertex, fill=LightGreen] {\underline{9}, 6, 7, 10, 5, 4, 8, 3}
-			child {node[vertex, fill=AliceBlue] {\underline{10}}}
+			child {node[vertex, fill=GhostWhite] {\underline{10}}}
 			child {node[vertex, fill=LightGreen] {\underline{6}, 7, 5, 4, 8, 3}
-				child {node[vertex, fill=AliceBlue] {\underline{7}, 8}
-					child {node[vertex, fill=AliceBlue] {\underline{8}}}
+				child {node[vertex, fill=GhostWhite] {\underline{7}, 8}
+					child {node[vertex, fill=GhostWhite] {\underline{8}}}
 				}
 				child {node[vertex, fill=LightGreen] {\underline{5}, 4, 3}
 					child {node[vertex, fill=LightGreen] {\underline{4}, 3}
@@ -200,7 +199,7 @@ We explain by example. Here's a quicksort tree for sorting \(A = \left \{ 2, 9, 
 				}
 			}
 		}
-		child {node[vertex, fill=AliceBlue] {\underline{1}}};
+		child {node[vertex, fill=GhostWhite] {\underline{1}}};
 		
 	
 	\end{tikzpicture}
