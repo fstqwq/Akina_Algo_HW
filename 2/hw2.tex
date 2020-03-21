@@ -4,6 +4,7 @@
 \usepackage{xeCJK}
 \usepackage{hw}
 \usepackage{pythonhighlight}
+\usepackage{tikz}
 
 \renewcommand{\hwtitle} {CS217 Homework 2}	
 \renewcommand{\hwauthor}{Akina}
@@ -75,9 +76,45 @@ def second_max(a, n):
         c.append(b[x ^ 1])
     return max(c)
 \end{python}
-	First part we do $n - 1$ comparisons to get the maximum element by a heap-like order, using an array of $2n$ element to store the "comparison tree". In my implementation, to use $1$-indexed array there's an auxiliary number taking the place of $0$.
+	First part we do $n - 1$ comparisons to get the maximum element by a heap-like order, using an array of $2n$ elements to store the "comparison tree". In my implementation, to use $1$-indexed array there's an auxiliary number taking the place of $0$.
+	
+	\begin{figure}[h]
+		\centering
+		
+		\begin{tikzpicture}[ grow'=down,
+		 								line width = 1pt,
+										vertex/.style={fill=none,draw,circle},
+										level 1/.style={sibling distance=6cm, level distance=1.3cm},
+										level 2/.style={sibling distance=3cm, level distance=1.3cm},
+										level 3/.style={sibling distance=1.5cm, level distance=1.3cm}]
+										
+		\node [vertex, fill=yellow] {1}
+			child {node[vertex, fill=yellow] {2}
+				child {node[vertex, fill=yellow] {4}
+					child {node[vertex, fill=green] {8}}
+					child {node[vertex, fill=yellow] {9}}
+				}
+				child {node[vertex, fill=green] {5}
+					child {node[vertex] {10}}
+					child {node[vertex] {11}}
+				}
+			}
+			child {node[vertex, fill=green] {3}
+				child {node[vertex] {6}
+					child {node[vertex] {12}}
+					child {node[vertex] {13}}
+				}
+				child {node[vertex] {7}
+					child {node[vertex] {14}}
+					child {node[vertex] {15}}
+				}
+			};
+		
+		\end{tikzpicture}
+		\caption{An example of 8 nodes}
+	\end{figure}
 
-	Now get back and see how the maximum is elected: every root of subtree is the maximum of corresponding leaves, and the root of the whole tree killed the maximum of some other parts on the path it became a king, where the union of those parts is the union of all other leaves. Second maximum is exactly the maximum of all other leaves, so just visit the path once and we can conclude the second maximum by $\log_2(n)$ comparisons.
+	Now get back and see how the maximum is elected: each root of subtree is the maximum of the nodes which is the root's descendants. Observe Figure 1, the value of root of the whole tree(i.e. node of index 1) comes from the maximum of its children. Then we get a path(the node filling in yellow). Second maximum is the maximum of the other leaves. We can get the value by visiting the yellow path once and comparing the adjacent nodes(green nodes). The number of green nodes is the height of the tree, that is, $\log_2(n)$. We can conclude the second maximum by $\log_2(n)$ comparisons.
 
 	In total, $n + \log_2(n) - 1$ comparisons achieved.
 \end{problem}
