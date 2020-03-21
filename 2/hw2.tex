@@ -5,6 +5,12 @@
 \usepackage{hw}
 \usepackage{pythonhighlight}
 \usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\newcommand{\nth}[1]{#1\textsuperscript{th}}
+\newcommand{\E}{\mathop{\mathbb{E\/}}}
+
 
 \renewcommand{\hwtitle} {CS217 Homework 2}	
 \renewcommand{\hwauthor}{Akina}
@@ -119,5 +125,78 @@ def second_max(a, n):
 	In total, $n + \log_2(n) - 1$ comparisons achieved.
 \end{problem}
 
+\section*{Quickselect}
+
+Remember the recursive algorithm \textsc{QuickSelect} from the lecture. I write
+it below in pseudocode. In analogy to quicksort we define QuickSelect deterministically
+and assume that the input array is random, or has been randomly shuffled before
+QuickSelect is called. We assume that $A$ consists of distinct elements and
+$1 \leq k \leq |A|$.
+
+Let $C$ be the number of comparison made by $\textsc{QuickSelect}$. In the 
+lecture we proved that $\E[C] \leq O(n)$ when we run it on a random input.
+
+\begin{problem}{5}
+\statement
+Explain how \textsc{QuickSelect} can be viewed as a ``partial execution'' of quicksort
+with the random pivot selection rule.
+Draw an example quicksort tree and show which part of this tree is visited
+by \text{QuickSelect}.
+
+\begin{algorithm}
+	\caption{Select the \nth{$k$} smallest element from a list $A$}
+	\begin{algorithmic}[1]
+		\Procedure{QuickSelect}{$X,k$}
+		\If{$|X| = 1$}
+		\State \Return $X[1]$
+		\Else:
+		\State $p := X[1]$
+		\State $Y:= [ x \in X \ | \ x < p]$
+		\State $Z := [ x \in X \ | \ x > p]$
+		\If{$|B| = k-1$}
+		\State \Return $p$
+		\ElsIf{$|Y| \geq k$}
+		\State \Return $\textsc{QuickSelect}(Y,k)$
+		\Else
+		\State Return $\textsc{QuickSelect}(Z, k- |Y| - 1)$
+		\EndIf
+		\EndIf
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Let $B_{i,j,k}$ be an indicator variable which is $1$ if $i$ is a common ancestor
+of $j$ and $k$ in the quicksort tree. That is, if both $j$ and $k$ appear in the 
+subtree of $T(\pi)$ rooted at $i$.
+
+\end{problem}
+
+\begin{problem}{6}
+\statement
+What is $\E[B_{i,j,k}]$? Give a succinct formula for this.
+\end{problem}
+
+\begin{problem}{7}
+\statement
+Let $C(\pi,k)$ be the number of comparisons made by \textsc{QuickSelect} when given
+$\pi$ as input. Design a formula for $C(\pi,k)$ with the help of the indicator
+variables $A_{i,j}$ and $B_{i,j,k}$ (analogous to the formula 
+$\sum_{i \ne j} A_{i,j}$ for the number of comparisons made by quicksort).
+\end{problem}
+
+
+\begin{problem}{8}
+\statement
+Suppose we use \textsc{QuickSelect} to find the minimum of the array. On expectation,
+how many comparisons will it make? Give an answer that is exact up to additive terms 
+of order $o(n)$.
+You can use the fact that $H_k := 1 + \frac{1}{2} + \frac{1}{3} + \cdots  + \frac{1}{n} = \ln(n) + o(1)$.
+\end{problem}
+
+\begin{problem}{9}
+\statement
+Derive a formula for $\E_{\pi} [C(\pi,k)]$, up to additive terms of order $o(n)$.
+You might want to introduce $\kappa := k/n$.
+\end{problem}
 
 \end{document}
