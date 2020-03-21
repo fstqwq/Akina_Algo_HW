@@ -1,5 +1,5 @@
 \documentclass[11pt,a4paper,oneside]{article}
-
+\usepackage[dvipsnames, svgnames, x11names]{xcolor}
 \usepackage{euler,amsthm,amsmath,amsfonts,graphicx,epigraph,indentfirst,enumerate,comment,listings,fontspec,color,subcaption,listings}
 \usepackage{xeCJK}
 \usepackage{hw}
@@ -83,7 +83,7 @@ def second_max(a, n):
         c.append(b[x ^ 1])
     return max(c)
 \end{python}
-	First part we do $n - 1$ comparisons to get the maximum element by a heap-like order, using an array of $2n$ elements to store the "comparison tree". In my implementation, to use $1$-indexed array there's an auxiliary number taking the place of $0$.
+	It's actually a segment tree. First part we do $n - 1$ comparisons to get the maximum element by a heap-like order, using an array of $2n$ elements to store the "comparison tree". In my implementation, to use $1$-indexed array there's an auxiliary number taking the place of $0$.
 	
 	\begin{figure}[H]
 		\centering
@@ -95,33 +95,39 @@ def second_max(a, n):
 										level 2/.style={sibling distance=3cm, level distance=1.3cm},
 										level 3/.style={sibling distance=1.5cm, level distance=1.3cm}]
 										
-		\node [vertex, fill=yellow] {1}
-			child {node[vertex, fill=green] {3}
-				child {node[vertex] {7}
-					child {node[vertex] {15}}
-					child {node[vertex] {14}}
+		\node [vertex, fill=LightGreen] {9}
+			child {node[vertex, fill=Gold] {5}
+				child {node[vertex, fill=AliceBlue] {4}
+					child {node[vertex, fill=AliceBlue] {4}}
+					child {node[vertex, fill=AliceBlue] {1}}
 				}
-				child {node[vertex] {6}
-					child {node[vertex] {13}}
-					child {node[vertex] {12}}
+				child {node[vertex, fill=AliceBlue] {5}
+					child {node[vertex, fill=AliceBlue] {5}}
+					child {node[vertex, fill=AliceBlue] {4}}
 				}
 			}
-			child {node[vertex, fill=yellow] {2}
-				child {node[vertex, fill=green] {5}
-					child {node[vertex] {11}}
-					child {node[vertex] {10}}
+			child {node[vertex, fill=LightGreen] {9}
+				child {node[vertex, fill=Gold] {1}
+					child {node[vertex, fill=AliceBlue] {1}}
+					child {node[vertex, fill=AliceBlue] {1}}
 				}
-				child {node[vertex, fill=yellow] {4}
-					child {node[vertex, fill=yellow] {9}}
-					child {node[vertex, fill=green] {8}}
+				child {node[vertex, fill=LightGreen] {9}
+					child {node[vertex, fill=LightGreen] {9}}
+					child {node[vertex, fill=Gold] {1}}
 				}
 			};
 		
 		\end{tikzpicture}
-		\caption{An example of 8 nodes}
+		\caption{An example of $[1, 9, 1, 1, 4, 5, 1, 4]$}
 	\end{figure}
 
-	Now get back and see how the maximum is elected: each root of subtree is the maximum of the nodes which is the root's descendants. Observe Figure 1, the value of root of the whole tree(i.e. node of index 1) comes from the maximum of its children. Then we get a path(the node filling in yellow). Second maximum is the maximum of the other leaves. We can get the value by visiting the yellow path once and comparing the adjacent nodes(green nodes). The number of green nodes is the height of the tree, that is, $\log_2(n)$. We can conclude the second maximum by $\log_2(n)$ comparisons.
+	Now get back and see how the maximum is elected: each root of subtree is the maximum of 
+	the nodes which is the root's descendants. Observe Figure 1, the value of root of the whole 
+	tree(i.e. node of index 1) comes from the maximum of its children. Then we get a path(the node 
+	filling in green). Second maximum is the maximum of the other leaves. We can get the value by
+	visiting the path once and comparing the sibling nodes(yellow nodes). The number 
+	of yellow nodes is the height of the tree, that is, $\log_2(n)$. We can conclude the second 
+	maximum by $\log_2(n)$ comparisons.
 
 	In total, $n + \log_2(n) - 1$ comparisons achieved.
 \end{problem}
@@ -180,21 +186,21 @@ We explain by example. Here's a quicksort tree for sorting \(A = \left \{ 2, 9, 
 	level 2/.style={sibling distance=3cm, level distance=1.3cm},
 	level 3/.style={sibling distance=1.5cm, level distance=1.3cm}]
 	
-	\node [vertex, fill=yellow] {\underline{2}, 9, 6, 7, 1, 10, 5, 4, 8, 3}
-		child {node[vertex, fill=yellow] {\underline{9}, 6, 7, 10, 5, 4, 8, 3}
-			child {node[vertex] {\underline{10}}}
-			child {node[vertex, fill=yellow] {\underline{6}, 7, 5, 4, 8, 3}
-				child {node[vertex] {\underline{7}, 8}
-					child {node[vertex] {\underline{8}}}
+	\node [vertex, fill=LightGreen] {\underline{2}, 9, 6, 7, 1, 10, 5, 4, 8, 3}
+		child {node[vertex, fill=LightGreen] {\underline{9}, 6, 7, 10, 5, 4, 8, 3}
+			child {node[vertex, fill=AliceBlue] {\underline{10}}}
+			child {node[vertex, fill=LightGreen] {\underline{6}, 7, 5, 4, 8, 3}
+				child {node[vertex, fill=AliceBlue] {\underline{7}, 8}
+					child {node[vertex, fill=AliceBlue] {\underline{8}}}
 				}
-				child {node[vertex, fill=yellow] {\underline{5}, 4, 3}
-					child {node[vertex, fill=yellow] {\underline{4}, 3}
-						child {node[vertex, fill=yellow] {\underline{3}}}
+				child {node[vertex, fill=LightGreen] {\underline{5}, 4, 3}
+					child {node[vertex, fill=LightGreen] {\underline{4}, 3}
+						child {node[vertex, fill=LightGreen] {\underline{3}}}
 					}
 				}
 			}
 		}
-		child {node[vertex] {\underline{1}}};
+		child {node[vertex, fill=AliceBlue] {\underline{1}}};
 		
 	
 	\end{tikzpicture}
