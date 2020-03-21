@@ -7,6 +7,7 @@
 \usepackage{tikz}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{float}
 
 \newcommand{\nth}[1]{#1\textsuperscript{th}}
 \newcommand{\E}{\mathop{\mathbb{E\/}}}
@@ -84,7 +85,7 @@ def second_max(a, n):
 \end{python}
 	First part we do $n - 1$ comparisons to get the maximum element by a heap-like order, using an array of $2n$ elements to store the "comparison tree". In my implementation, to use $1$-indexed array there's an auxiliary number taking the place of $0$.
 	
-	\begin{figure}[h]
+	\begin{figure}[H]
 		\centering
 		
 		\begin{tikzpicture}[ grow'=down,
@@ -95,24 +96,24 @@ def second_max(a, n):
 										level 3/.style={sibling distance=1.5cm, level distance=1.3cm}]
 										
 		\node [vertex, fill=yellow] {1}
-			child {node[vertex, fill=yellow] {2}
-				child {node[vertex, fill=yellow] {4}
-					child {node[vertex, fill=green] {8}}
-					child {node[vertex, fill=yellow] {9}}
+			child {node[vertex, fill=green] {3}
+				child {node[vertex] {7}
+					child {node[vertex] {15}}
+					child {node[vertex] {14}}
 				}
-				child {node[vertex, fill=green] {5}
-					child {node[vertex] {10}}
-					child {node[vertex] {11}}
+				child {node[vertex] {6}
+					child {node[vertex] {13}}
+					child {node[vertex] {12}}
 				}
 			}
-			child {node[vertex, fill=green] {3}
-				child {node[vertex] {6}
-					child {node[vertex] {12}}
-					child {node[vertex] {13}}
+			child {node[vertex, fill=yellow] {2}
+				child {node[vertex, fill=green] {5}
+					child {node[vertex] {11}}
+					child {node[vertex] {10}}
 				}
-				child {node[vertex] {7}
-					child {node[vertex] {14}}
-					child {node[vertex] {15}}
+				child {node[vertex, fill=yellow] {4}
+					child {node[vertex, fill=yellow] {9}}
+					child {node[vertex, fill=green] {8}}
 				}
 			};
 		
@@ -138,7 +139,7 @@ lecture we proved that $\E[C] \leq O(n)$ when we run it on a random input.
 
 \begin{problem}{5}
 \statement
-Explain how \textsc{QuickSelect} can be viewed as a ``partial execution'' of quicksort
+Explain how \textsc{QuickSelect} can be viewed as a "partial execution'' of quicksort
 with the random pivot selection rule.
 Draw an example quicksort tree and show which part of this tree is visited
 by \text{QuickSelect}.
@@ -153,7 +154,7 @@ by \text{QuickSelect}.
 		\State $p := X[1]$
 		\State $Y:= [ x \in X \ | \ x < p]$
 		\State $Z := [ x \in X \ | \ x > p]$
-		\If{$|B| = k-1$}
+		\If{$|Y| = k-1$}
 		\State \Return $p$
 		\ElsIf{$|Y| \geq k$}
 		\State \Return $\textsc{QuickSelect}(Y,k)$
@@ -165,15 +166,71 @@ by \text{QuickSelect}.
 	\end{algorithmic}
 \end{algorithm}
 
-Let $B_{i,j,k}$ be an indicator variable which is $1$ if $i$ is a common ancestor
-of $j$ and $k$ in the quicksort tree. That is, if both $j$ and $k$ appear in the 
-subtree of $T(\pi)$ rooted at $i$.
+\solution
+
+We explain by example. Here's a quicksort tree for sorting \(A = \left \{ 2, 9, 6, 7, 1, 10, 5, 4, 8, 3\right \}\)
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{tikzpicture}[ grow'=down,
+	line width = 1pt,
+	vertex/.style={fill=none,draw,rectangle},
+	level 1/.style={sibling distance=6cm, level distance=1.3cm},
+	level 2/.style={sibling distance=3cm, level distance=1.3cm},
+	level 3/.style={sibling distance=1.5cm, level distance=1.3cm}]
+	
+	\node [vertex, fill=yellow] {\underline{2}, 9, 6, 7, 1, 10, 5, 4, 8, 3}
+		child {node[vertex, fill=yellow] {\underline{9}, 6, 7, 10, 5, 4, 8, 3}
+			child {node[vertex] {\underline{10}}}
+			child {node[vertex, fill=yellow] {\underline{6}, 7, 5, 4, 8, 3}
+				child {node[vertex] {\underline{7}, 8}
+					child {node[vertex] {\underline{8}}}
+				}
+				child {node[vertex, fill=yellow] {\underline{5}, 4, 3}
+					child {node[vertex, fill=yellow] {\underline{4}, 3}
+						child {node[vertex, fill=yellow] {\underline{3}}}
+					}
+				}
+			}
+		}
+		child {node[vertex] {\underline{1}}};
+		
+	
+	\end{tikzpicture}
+	\caption{quicksort tree for \(\left \{ 2, 9, 6, 7, 1, 10, 5, 4, 8, 3\right \}\)}
+\end{figure}
+
+QuickSelect quite similar to QuickSort, for selecting the first element as the pivot and dividing the set into two subsets. What different is that QuickSelect Algorithm do recursion only for a part(i.e. either the part greater than the pivot or the part less than the pivot). If we want to find the \nth{\(3\)} element in the above example. It only visit the node filled in yellow.
+
+That's why QuickSelect can be viewed as a "partial execution'' of quicksort.
+
+[TODO: with the random pivot selection rule?]
 
 \end{problem}
 
 \begin{problem}{6}
 \statement
+Let $B_{i,j,k}$ be an indicator variable which is $1$ if $i$ is a common ancestor
+of $j$ and $k$ in the quicksort tree. That is, if both $j$ and $k$ appear in the 
+subtree of $T(\pi)$ rooted at $i$.
+
 What is $\E[B_{i,j,k}]$? Give a succinct formula for this.
+
+\solution
+\begin{lemma}
+	\(B_{i, j, k} = 1\) if and only if \(i \in [j, k]\) and \(i\) comes first in \([j, k]\)
+\end{lemma}
+\begin{proof}
+	TODO[finish the proof]
+\end{proof}
+
+\[
+	\begin{split}
+		\E[\sum_{i \not= j, j \not= k, k \not= i}B_{i, j, k}] &= \sum_{i \not= j, j \not= k, k \not= i} \E[B_{i,j,k}] \\
+		&= \sum_{i \not= j, j \not= k, k \not= i} \frac{|k - j| - 1}{n} \frac{1}{|k - j| + 1} \\
+	\end{split}
+\]
 \end{problem}
 
 \begin{problem}{7}
