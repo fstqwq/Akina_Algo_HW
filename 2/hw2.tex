@@ -226,6 +226,7 @@ What is $\E[B_{i,j,k}]$? Give a succinct formula for this.
 \begin{lemma}
 	\(B_{i, j, k} = 1\) if and only if \(i \in [j, k]\) and \(i\) comes first in \([j, k]\)
 \end{lemma}
+\\(Are you sure that the lemma is true? - Wang Yi)
 \begin{proof}
 	TODO[finish the proof]
 \end{proof}
@@ -252,13 +253,56 @@ $\sum_{i \ne j} A_{i,j}$ for the number of comparisons made by quicksort).
 Suppose we use \textsc{QuickSelect} to find the minimum of the array. On expectation,
 how many comparisons will it make? Give an answer that is exact up to additive terms 
 of order $o(n)$.
-You can use the fact that $H_k := 1 + \frac{1}{2} + \frac{1}{3} + \cdots  + \frac{1}{n} = \ln(n) + o(1)$.
+You can use the fact that $H_n := 1 + \frac{1}{2} + \frac{1}{3} + \cdots  + \frac{1}{n} = \ln(n) + o(1)$.
+\solution
+\begin{proof}
+    We have found a formula for $C(\pi,k)$ in the last problem. Therefore we only need to calculate $\E[C(\pi,1)]$.\\
+    \[
+        \begin{split}
+            \E[C(\pi,1)] &= \E[\sum_{i \not= 1}A_{i, 1} + \sum_{i \not= 1}A_{1, i} + \sum_{i \not= j, i \not= 1,j \not= 1}B_{i, j, 1}]\\
+            &= \E[\sum_{i \not= 1}A_{i, 1} + \sum_{i \not= 1}A_{1, i} + \sum_{2 \leq i < j \leq n}B_{i, j, 1} + \sum_{2 \leq j < i \leq n}B_{i, j, 1}]\\
+            &= \sum_{i \not= 1} \E[A_{i, 1}] + \sum_{i \not= 1} \E[A_{1, i}] + \sum_{2 \leq i < j \leq n}\E[B_{i, j, 1}] + \sum_{2 \leq j < i \leq n}\E[B_{i, j, 1}]\\
+            &= \sum_{i \not= 1} \frac{1}{i} + \sum_{i \not= 1} \frac{1}{i} + \sum_{2 \leq i < j \leq n} \frac{1}{j} + \sum_{2 \leq j < i \leq n}\frac{1}{i}\\
+            &= \sum_{i \not= 1} \frac{1}{i} + \sum_{i \not= 1} \frac{1}{i} + \sum_{2 < j \leq n}(1 - \frac{2}{j}) + \sum_{2 < i \leq n}(1 - \frac{2}{i})\\
+            &= (H_n - 1) + (H_n - 1) + (n - 2) - 2(Hn - \frac{3}{2}) + (n - 2) - 2(Hn - \frac{3}{2})\\
+            &= 2n - 2H_n\\
+            &= 2n + O(n)
+        \end{split}
+    \]
+    Thus, $2n + O(n)$ comparisons are made on expectation.
+\end{proof}
 \end{problem}
 
 \begin{problem}{9}
 \statement
 Derive a formula for $\E_{\pi} [C(\pi,k)]$, up to additive terms of order $o(n)$.
 You might want to introduce $\kappa := k/n$.
+\begin{proof}
+    \[
+        \begin{split}
+            \E_{\pi} [C(\pi,k)] &= \E[\sum_{i \not= k}A_{i, k} + \sum_{i \not= k}A_{k, i} + \sum_{i \not= j, i \not= k,j \not= k}B_{i, j, k}]\\
+            &= \sum_{i \not= k}\E[A_{i, k}] + \sum_{i \not= k}\E[A_{k, i}] + \sum_{i \not= j, i \not= k,j \not= k}\E[B_{i, j, k}]\\\\
+            \sum_{i \not= k}\E[A_{i, k}] + \sum_{i \not= k}\E[A_{k, i}] &= 2\sum_{i \not= k}\frac{1}{|i - k| + 1} \\
+            &= 2(H_k + H_{n - k + 1} - 2)\\\\
+            \sum_{i \not= j, i \not= k,j \not= k}\E[B_{i, j, k}] &= (\sum_{i < j < k} + \sum_{j < i < k} + \sum_{k < i < j} + \sum_{k < j < i} + \sum_{i < k < j} + \sum_{j < k < i}) \E[B_{i, j, k}] \\\\
+            (\sum_{i < j < k} + \sum_{j < i < k})\E[B_{i, j, k}] &= \sum_{i < j < k}\frac{1}{k - i + 1} + \sum_{j < i < k}\frac{1}{k - j + 1}\\
+            &= \sum_{1 \leq i < k - 1}1 - \frac{2}{k - i + 1} + \sum_{1 \leq j < k - 1} 1 - \frac{2}{k - j + 1}\\
+            &= 2k - 4H_k + 2\\\\
+            (\sum_{k < i < j} + \sum_{k < j < i})\E[B_{i, j, k}] &= \sum_{k < i < j}\frac{1}{j - k + 1} + \sum_{k < j < i}\frac{1}{i - k + 1}\\
+            &= \sum_{k + 1 < j \leq n}1 - \frac{2}{j - k + 1} + \sum_{k + 1 < i \leq n} 1 - \frac{2}{i - k + 1}\\
+            &= 2(n - k) - 4(H_{n - k + 1} - 1)\\
+            &= 2(n - k + 1) - 4H_{n - k + 1} + 2\\\\
+            (\sum_{i < k < j} + \sum_{j < k < i}) \E[B_{i, j, k}] &= \sum_{i < k < j}\frac{1}{j - i + 1} + \sum_{j < k < i}\frac{1}{i - j + 1} \\
+            &= 2(\sum_{1 \leq i < j \leq n}\frac{1}{j - i + 1} - \sum_{1 \leq i < j \leq k}\frac{1}{j - i + 1} - \sum_{k \leq i < j \leq n}\frac{1}{j - i + 1})\\
+            &= 2(((n + 1)H_n -2n) - ((k + 1)H_k -2k) - ((n - k + 1 + 1)H_{n - k + 1} - 2(n - k + 1)))\\
+            &= (2n + 2)H_n - (2k + 2)H_k - (2n - 2k + 4)H_{n - k + 1} + 4\\\\
+            \E_{\pi} [C(\pi,k)] &= (2n + 2)H_n - (2k + 4)H_k - (2n - 2k + 6)H_{n - k + 1} + 2n + 6\\
+            &= ((2n + 2) - (2k + 4)\frac{H_k}{H_n} - (2n - 2k + 6)\frac{H_{n - k + 1}}{H_n})H_n + 2n + 6\\
+            &\leq ((2n + 2) - (2k + 4)\kappa - (2n - 2k + 6)(1 - \kappa))H_{n} + 2n + 6 \\
+            &= (2\kappa(1 - \kappa)n + 2\kappa - 4)(H_n) + 2n + 6\\
+            &= 2\kappa(1 - \kappa)n\log_2(n) + 2n + O(n)
+        \end{split}
+    \]
+\end{proof}
 \end{problem}
-
 \end{document}
