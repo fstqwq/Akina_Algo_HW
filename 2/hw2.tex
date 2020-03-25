@@ -245,6 +245,27 @@ Let $C(\pi,k)$ be the number of comparisons made by \textsc{QuickSelect} when gi
 $\pi$ as input. Design a formula for $C(\pi,k)$ with the help of the indicator
 variables $A_{i,j}$ and $B_{i,j,k}$ (analogous to the formula 
 $\sum_{i \ne j} A_{i,j}$ for the number of comparisons made by quicksort).
+
+\solution
+\begin{lemma}
+$C(\pi,k)=\sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}$
+\end{lemma}
+\begin{proof}
+In a QuickSelect tree$T(\pi)$, because QuickSelect only do recursion for the part of $T(\pi)$ which contains the target $k$, 
+comparisons only appear when a pivot $i$ is compared with all the other elements in the subtree rooted at $i$ and its subtree contains the target $k$. 
+
+For two different element $i$ and $k$, i and k are compared once if and only if $k$ is in the subtree of $T(\pi)$ rooted at $i$ or $i$ is in the subtree of $T(\pi)$ rooted at $k$.And $i$ is in the subtree rooted at $k$ means $k$ is an ancestor of $i$ and vice versa, so it means the number of comparison made between $i$ and $k$ is $A_{i,k}+A_{k,i}$.
+
+For two different element $i$ and $j$ when $i\ne k$ and $j\ne k$, i and j are compared once if and only if both $j$ and $k$ are in the subtree of $T(\pi)$ rooted at $i$ or both $i$ and $k$ are in the subtree of $T(\pi)$ rooted at $j$. By definition, the number of comparison made between $i$ and $j$ is $B_{i,j,k}+B_{j,i,k}$.
+
+Note that if we mark $\sum_{i \ne j,i \ne k,j\ne k} (B_{i,j,k}+B_{j,i,k})$, every pair of $i,j$ is counted twice,so the answer should be divided by 2.
+    \[
+        \begin{split}
+            C(\pi,k) &= \sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\frac{1}{2}\sum_{i \ne j,i \ne k,j\ne k}(B_{i,j,k}+B_{j,i,k})\\
+			&= \sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}
+        \end{split}
+    \]
+\end{proof}
 \end{problem}
 
 
