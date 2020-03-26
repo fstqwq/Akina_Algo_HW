@@ -206,7 +206,7 @@ We explain by example. Here's a quicksort tree for sorting \(A = \left \{ 2, 9, 
 	\caption{quicksort tree for \(\left \{ 2, 9, 6, 7, 1, 10, 5, 4, 8, 3\right \}\)}
 \end{figure}
 
-QuickSelect quite similar to QuickSort, for selecting the first element as the pivot and dividing the set into two subsets. What different is that QuickSelect Algorithm do recursion only for a part(i.e. either the part greater than the pivot or the part less than the pivot). If we want to find the \nth{\(3\)} element in the above example. It only visit the node filled in yellow.
+QuickSelect is quite similar to QuickSort. They both select the first element as the pivot and divide the set into two subsets. What different is that QuickSelect Algorithm do recursion only for one part(i.e. either the part greater than the pivot or the part less than the pivot). If we want to find the \nth{\(3\)} element in the above example, we only need to visit the node filled in yellow in the quicksort tree.
 
 That's why QuickSelect can be viewed as a "partial execution'' of quicksort.
 
@@ -224,19 +224,16 @@ What is $\E[B_{i,j,k}]$? Give a succinct formula for this.
 
 \solution
 \begin{lemma}
-	\(B_{i, j, k} = 1\) if and only if \(i \in [j, k]\) and \(i\) comes first in \([j, k]\)
+	\(B_{i, j, k} = 1\) if and only if \(i\) comes earlier than any element in \([i, j] \cup [i, k]\) (i.e. \([\max(i, j, k), \min(i, j, k)]\)
 \end{lemma}
-\\(Are you sure that the lemma is true? - Wang Yi)
+
 \begin{proof}
-	TODO[finish the proof]
+	We proved that \(A_{i, j} = 1\) if and only if \(i\) comes first in \([i, j]\). \(B_{i, j, k} = 1\) impies \(A_{i, j} = 1\) and \(A_{i, k} = 1\), which means \(i\) comes first than any other element in \([i, j] \cup [i, k]\)
 \end{proof}
 
-\[
-	\begin{split}
-		\E[\sum_{i \not= j, j \not= k, k \not= i}B_{i, j, k}] &= \sum_{i \not= j, j \not= k, k \not= i} \E[B_{i,j,k}] \\
-		&= \sum_{i \not= j, j \not= k, k \not= i} \frac{|k - j| - 1}{n} \frac{1}{|k - j| + 1} \\
-	\end{split}
-\]
+Hence,
+
+\[ B_{i, j, k} = \frac{1}{\max(i, j, k) - \min(i, j, k) + 1} \]
 \end{problem}
 
 \begin{problem}{7}
