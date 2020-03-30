@@ -13,7 +13,7 @@
 \newcommand{\E}{\mathop{\mathbb{E\/}}}
 
 
-\renewcommand{\hwtitle} {CS217 Homework 2}	
+\renewcommand{\hwtitle} {CS217 Homework 2, First Submission}	
 \renewcommand{\hwauthor}{Akina}
 \renewcommand{\hwdate}{\today}
 
@@ -193,8 +193,8 @@ We explain by example. Here's a quicksort tree for sorting \(A = \left \{ 2, 9, 
 					child {node[vertex, fill=GhostWhite] {\underline{8}}}
 				}
 				child {node[vertex, fill=LightGreen] {\underline{5}, 4, 3}
-					child {node[vertex, fill=LightGreen] {\underline{4}, 3}
-						child {node[vertex, fill=LightGreen] {\underline{3}}}
+					child {node[vertex, fill=GhostWhite] {\underline{4}, 3}
+						child {node[vertex, fill=GhostWhite] {\underline{3}}}
 					}
 				}
 			}
@@ -203,14 +203,12 @@ We explain by example. Here's a quicksort tree for sorting \(A = \left \{ 2, 9, 
 		
 	
 	\end{tikzpicture}
-	\caption{quicksort tree for \(\left \{ 2, 9, 6, 7, 1, 10, 5, 4, 8, 3\right \}\)}
+	\caption{Quickselect \nth{\(5\)} in quicksort tree for \(\left \{ 2, 9, 6, 7, 1, 10, 5, 4, 8, 3\right \}\)}
 \end{figure}
 
-QuickSelect is quite similar to QuickSort. They both select the first element as the pivot and divide the set into two subsets. What different is that QuickSelect Algorithm do recursion only for one part(i.e. either the part greater than the pivot or the part less than the pivot). If we want to find the \nth{\(3\)} element in the above example, we only need to visit the node filled in yellow in the quicksort tree.
+QuickSelect is quite similar to QuickSort. They both select the first element as the pivot and divide the set into two subsets. What different is that QuickSelect Algorithm do recursion only for one part(i.e. either the part greater than the pivot or the part less than the pivot). If we want to find the \nth{\(5\)} element in the above example, we only need to visit the node filled in green in the quicksort tree.
 
 That's why QuickSelect can be viewed as a "partial execution'' of quicksort.
-
-[TODO: with the random pivot selection rule?]
 
 \end{problem}
 
@@ -224,12 +222,15 @@ What is $\E[B_{i,j,k}]$? Give a succinct formula for this.
 
 \solution
 \begin{lemma}
-	\(B_{i, j, k} = 1\) if and only if \(i\) comes earlier than any element in \([i, j] \cup [i, k]\) (i.e. \([\max(i, j, k), \min(i, j, k)]\)
-\end{lemma}
+	$B_{i, j, k} = 1$ if and only if $i$ comes earlier than any element in $[\min(i, j, k), \max(i, j, k)]$
 
-\begin{proof}
-	We proved that \(A_{i, j} = 1\) if and only if \(i\) comes first in \([i, j]\). \(B_{i, j, k} = 1\) impies \(A_{i, j} = 1\) and \(A_{i, k} = 1\), which means \(i\) comes first than any other element in \([i, j] \cup [i, k]\)
-\end{proof}
+	\begin{proof}
+		We proved that \(A_{i, j} = 1\) if and only if \(i\) comes first in \([\min(i, j), \max(i, j)]\). Express B using A, we got 
+		$$B_{i, j, k} = A_{i, j}A_{i, k}$$ 
+		Thus \(i\) comes first than any other element in $[\min(i, j, k), \max(i, j, k)]$
+	\end{proof}
+	
+\end{lemma}
 
 Hence,
 
@@ -245,23 +246,30 @@ $\sum_{i \ne j} A_{i,j}$ for the number of comparisons made by quicksort).
 
 \solution
 \begin{lemma}
-$C(\pi,k)=\sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}$
+$$C(\pi,k)=\sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}$$
 \end{lemma}
 \begin{proof}
-In a QuickSelect tree$T(\pi)$, because QuickSelect only do recursion for the part of $T(\pi)$ which contains the target $k$, 
-comparisons only appear when a pivot $i$ is compared with all the other elements in the subtree rooted at $i$ and its subtree contains the target $k$. 
 
-For two different element $i$ and $k$, i and k are compared once if and only if $k$ is in the subtree of $T(\pi)$ rooted at $i$ or $i$ is in the subtree of $T(\pi)$ rooted at $k$.And $i$ is in the subtree rooted at $k$ means $k$ is an ancestor of $i$ and vice versa, so it means the number of comparison made between $i$ and $k$ is $A_{i,k}+A_{k,i}$.
+For an element $i$ different from $k$, there're $3$ cases for it:
+\begin{itemize}
+	\item Becoming a pivot before found $k$, i.e. $A_{i, k} = 1$
+	\item Still in the same part with $k$ when $k$ is chosen as pivot, i.e. $A_{k, i} = 1$
+	\item Been ``thrown away'' since it was divided into another part by some pivot, i.e. $A_{i, k} + A_{k, i} = 0$
+\end{itemize}
 
-For two different element $i$ and $j$ when $i\ne k$ and $j\ne k$, i and j are compared once if and only if both $j$ and $k$ are in the subtree of $T(\pi)$ rooted at $i$ or both $i$ and $k$ are in the subtree of $T(\pi)$ rooted at $j$. By definition, the number of comparison made between $i$ and $j$ is $B_{i,j,k}+B_{j,i,k}$.
+Count seperately, we have
+\begin{itemize}
+	\item $A_{i, k} (1 + \sum_{j \neq i} A_{j, i}) = A_{i, k} (1 + \sum_{j \neq i, j \neq k} B_{j, i, k})$
+	\item $A_{k, i} (1 + \sum_{j \neq k} A_{j, k}) = A_{k, i} (1 + \sum_{j \neq i, j \neq k} B_{j, i, k})$
+	\item $(1 - A_{k, i} - A_{i, k})(\sum_{j \neq i, j \neq k} B_{j, i, k})$
+\end{itemize}
 
-Note that if we mark $\sum_{i \ne j,i \ne k,j\ne k} (B_{i,j,k}+B_{j,i,k})$, every pair of $i,j$ is counted twice,so the answer should be divided by 2.
-    \[
-        \begin{split}
-            C(\pi,k) &= \sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\frac{1}{2}\sum_{i \ne j,i \ne k,j\ne k}(B_{i,j,k}+B_{j,i,k})\\
-			&= \sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}
-        \end{split}
-    \]
+In total,
+\begin{align*}
+	C(\pi,k) &= \sum_{i \neq k} (A_{i, k} (1 + \sum_{j \neq i, j \neq k} B_{j, i, k}) +A_{k, i} (1 + \sum_{j \neq i, j \neq k} B_{j, i, k}) +(1 - A_{k, i} - A_{i, k})\sum_{j \neq i, j \neq k} B_{j, i, k}) \\
+	&= \sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}
+\end{align*}
+
 \end{proof}
 \end{problem}
 
@@ -274,7 +282,10 @@ of order $o(n)$.
 You can use the fact that $H_n := 1 + \frac{1}{2} + \frac{1}{3} + \cdots  + \frac{1}{n} = \ln(n) + o(1)$.
 \solution
 \begin{proof}
-    We have found a formula for $C(\pi,k)$ in the last problem. Therefore we only need to calculate $\E[C(\pi,1)]$.\\
+	We have found a formula for $C(\pi,k)$ in the last problem. Therefore we only need to calculate $\E[C(\pi,1)]$.
+
+	(See next page)
+
     \[
         \begin{split}
             \E[C(\pi,1)] &= \E[\sum_{i \not= 1}A_{i, 1} + \sum_{i \not= 1}A_{1, i} + \sum_{i \not= j, i \not= 1,j \not= 1}B_{i, j, 1}]\\
@@ -295,6 +306,9 @@ You can use the fact that $H_n := 1 + \frac{1}{2} + \frac{1}{3} + \cdots  + \fra
 \statement
 Derive a formula for $\E_{\pi} [C(\pi,k)]$, up to additive terms of order $o(n)$.
 You might want to introduce $\kappa := k/n$.
+
+\solution
+(See next page)
 \begin{proof}
     \[
         \begin{split}
