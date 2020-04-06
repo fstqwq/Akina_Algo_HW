@@ -90,9 +90,7 @@ subgraph of $G$ consisting of all edges of weight at most $c$.
 	
 	\solution
 \end{problem}
-
-\section*{Quickselect}
-
+\section*{}
 A {\em multigraph} is a graph that can have multiple edges, called
 ``parallel edges''. Without defining 
 it formally, we illustrate it:
@@ -113,8 +111,50 @@ different:
 \begin{problem}{4}
 \statement
 How many spanning trees does the above multigraph on 7 vertices have?
-Justify your answer!
+Justify your \text{answer}!
 
+\solution
+
+$49$.
+\begin{proof}
+Observe the multigraph: First we consider both the multiedges as simple edges, then the graph is a triangle and a quadrangle connected by a bridge. The bridge must be chosen. In triangle, there are $1 + 2 \times 3$ ways to form a tree. In quadrangle, there are $1 + 3 \times 2$ ways. Simply multiply them, therefore the \text{answer} is $49$.
+\end{proof}
+\begin{proof}
+Using Kirchhoff's theorem we can justify our \text{answer} simply calculate the determinant of Laplacian matrix for the multigraph. Using the following code
+\begin{python}
+import numpy as np
+n, m = map(int, input().split())
+K = np.zeros((n, n), dtype=np.int64)
+for i in range(m):
+	u, v = map(lambda x:int(x) - 1, input().split())
+	K[u][u] -= 1
+	K[v][v] -= 1
+	K[u][v] += 1
+	K[v][u] += 1
+K = np.delete(K, 0, 0)
+K = np.delete(K, 0, 1)
+print(int(round(np.linalg.det(K))))
+\end{python}
+and input data
+\begin{python}
+7 11
+1 2
+1 3
+2 3
+2 3
+2 3
+2 4
+4 5
+5 6
+6 7
+4 7
+4 7
+\end{python}
+Then we get \text{answer}
+\begin{python}
+49
+\end{python}
+\end{proof}
 \end{problem}
 
 \begin{problem}{5}
@@ -126,6 +166,30 @@ that, given a weighted graph $G$, computes the number of
 minimum spanning trees of $G$.
 
 \solution
+
+We use denote the union find set as $UFset$, and the polynomial­-time algorithm to count trees as \textsc{CountTree}. In order to keep the pseudocode simple, there are many set operations used in the code that should be implemented with sortings, taggings, and traversings. With best implementation it should be $O(m \log m + n ^ 3)$, assuming that the polynomial­-time algorithm is based on Kirchhoff's Matrix Tree theorem and Gauss elimination.
+
+\begin{algorithm}
+	\caption{Computes number of MST in $G$}
+	\begin{algorithmic}[1]
+		\Procedure{CountMST}{$V, E$}
+		\State $UFset.\text{initialize}(|V|)$
+		\State $ans \gets 1$
+		\For{$w \in w(E)$ increasingly}
+		\State $E_w \gets \big\{e \in E \big| w(e) = w\big\}$
+		\State $V_w \gets \big\{UFset.\text{parent}(v) \big| (v, x) \in E_w\big\}$
+		\State $UFset_w \gets UFset.\text{merge}(E_w)$
+			\For{$c \in UFset_w(V_w)$} 
+				\State $V' \gets \big\{UFset.\text{parent}(v) \big| UFset_w.\text{parent}(v) = c\big\}$
+				\State $E' \gets \big\{(UFset.\text{parent}(u), UFset.\text{parent}(v)) \big| UFset_w.\text{parent}(u) = UFset_w.\text{parent}(v) = c\big\}$
+				\State $ans \gets ans \times \textsc{CountTree}(V', E')$
+			\EndFor
+		\State $UFset \gets UFset_w$
+		\EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
 
 \end{problem}
 
