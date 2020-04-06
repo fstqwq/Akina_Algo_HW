@@ -101,7 +101,7 @@ Justify your \text{answer}!
 
 \solution
 
-$49$.
+$49$. We will give two proofs.
 \begin{proof}
 Observe the multigraph: First we consider both the multiedges as simple edges, then the graph is a triangle and a quadrangle connected by a bridge. The bridge must be chosen. In triangle, there are $1 + 2 \times 3$ ways to form a tree. In quadrangle, there are $1 + 3 \times 2$ ways. Simply multiply them, therefore the \text{answer} is $49$.
 \end{proof}
@@ -163,11 +163,11 @@ We use denote the union find set as $UFset$, and the polynomial­-time algorithm
 		\State $ans \gets 1$
 		\For{$w \in w(E)$ increasingly}
 		\State $E_w \gets \big\{e \in E \big| w(e) = w\big\}$
-		\State $V_w \gets \big\{UFset.\text{parent}(v) \big| (v, x) \in E_w\big\}$
-		\State $UFset_w \gets UFset.\text{merge}(E_w)$
-			\For{$c \in UFset_w(V_w)$} 
-				\State $V' \gets \big\{UFset.\text{parent}(v) \big| UFset_w.\text{parent}(v) = c\big\}$
-				\State $E' \gets \big\{(UFset.\text{parent}(u), UFset.\text{parent}(v)) \big| UFset_w.\text{parent}(u) = UFset_w.\text{parent}(v) = c\big\}$
+		\State $UFset_w \gets UFset.\text{union}(E_w)$
+		\State $V_w \gets \big\{UFset_w.\text{find}(v) \big| v \in V \big\}$
+			\For{$c \in V_w$} 
+				\State $V' \gets \big\{UFset.\text{find}(v) \big| UFset_w.\text{find}(v) = c, v \in V\big\}$
+				\State $E' \gets \big\{ \{UFset.\text{find}(u), UFset.\text{find}(v)\} \big| UFset_w.\text{find}(u) = UFset_w.\text{find}(v) = c, \{u, v\} \in E_w\big\}$
 				\State $ans \gets ans \times \textsc{CountTree}(V', E')$
 			\EndFor
 		\State $UFset \gets UFset_w$
