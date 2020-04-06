@@ -14,7 +14,7 @@
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\R}{\mathbb{R}}
 
-\renewcommand{\hwtitle} {CS217 Homework 2, First Submission}	
+\renewcommand{\hwtitle} {CS217 Homework 3, First Submission}	
 \renewcommand{\hwauthor}{Akina}
 \renewcommand{\hwdate}{\today}
 
@@ -42,25 +42,11 @@ subgraph of $G$ consisting of all edges of weight at most $c$.
 	\solution
 	
 	\begin{proof}
-		\(\Rightarrow\): \(T_c\) is a subgraph of \(T\) consisting of all edges of weight at most \(c\). SInce \(T \subseteq G\), then we have  \(T_c = T \cap G_c\). This implies that \(T_c \subseteq G_c\) if two vertices \(u, v\) are connected in \(T_c\), they are connected in \(G_c\).
+		Since \(T_c\) is a subgraph of \(T\) consisting of all edges of weight at most \(c\) and \(T \subseteq G\), we have  \(T_c = T \cap G_c\). This implies that \(T_c \subseteq G_c\). Hence, if two vertices \(u, v\) are connected in \(T_c\), they are connected in \(G_c\). Hence the number of the connected components of \(T_c\) less than or equal to the number of \(G_c\)
 		
-		\(\Leftarrow\): we prove the contrapositive propostion: If two vertices \(u, v\) are not connected in \(T_c\), neither in \(G_c\). Considering Kruskal’s Algorithm
+		If we add edges in \(G_c / T_c\) one by one to \(T_c\), we finally get \(G_c\). Assume that \(T_c\) and \(G_c\) have different connected components, there must exist a edge, it connects two different components of \(T_c\), denoted by \(\{u, v\}\). Consider the path \(P: u(p_1), p_2, p_3, \dots, p_{k-1}, v(p_k)\) in \(T\), there must exist \(1 \leq i < k\), such that \(\{p_i, p_{i+1} \} \not\in T_c\), then \(w(\{p_i, p_{i+1}\}) > c\). If we replace \(\{p_i, p_{i+1}\}\) with \(e\), we will get another spanning tree with cheaper weight sum. A contradiction.
 		
-		\begin{enumerate}
-			\item Sort edges from cheap to expensive
-			\item Add to \(X\) the cheapest edge that does not create a cycle.
-		\end{enumerate}
-	
-		Given a minimum spanning tree \(T\), there exist an avaliable order of edges(by reorder the edges with same weight) such that the comeout of Kruskal's Algorithm is exactly \(T\). When we deal with a specific edge \(e\), analyse two cases: 
-		
-		\begin{enumerate}
-			\item \(e \in T\), \(e\) connects two components.
-			\item \(e \not\in T\), \(e\) introduce a circle. i.e. \(e\) doesn't Change the connectivity of any two vertices.
-		\end{enumerate}
-	
-		If the Algorithm Stops before processing \(e_{i+1}\), then we get \(T_c\) and \(G_c\), in which \(w(e_{i}) \leq c < w(e_{i + 1})\). If two vertices \(u, v\) are not connected in \(T_c\), neither in \(G_c\), since the other edges make no change of connectivity.
-		
-		Especially, If \(c\) bigger than the most expensive, \(G_c := G\), \(T_c := T\), they are all connected.
+		Hence, \(T_c\) and \(G_c\) have exactly the same connected components.
 	\end{proof}
 \end{problem}
 
@@ -73,14 +59,9 @@ subgraph of $G$ consisting of all edges of weight at most $c$.
 
 	\solution
 	
-	We prove it by reduction to absurdity. Without loss of generality, let \(m_c(T) > m_c(T')\). There exist at least one edge, donated by \(e = \{u, v\}\), such that \(e \in T\) but \(e \not\in T'\). \(T'_c\) is a good set since it is a subgraph of a minimum spaning tree \(T'\), find a cut \(S\) of \(T'_c\) contains \(u\) but not \(v\).
+	We prove it by reduction to absurdity. Without loss of generality, let \(m_c(T) > m_c(T')\). According to \textbf{Problem 1} we know, both \(T_c\) and \(T'_c\) have the same connected components as \(G_c\), hence \(T_c\) and \(T'_c\) have the same connected components. There must exist a connected components, which contains more edges in \(T_c\) than \(T'_c\). \(T'\) does not contain circles, hence so does \(T'_c\) since it is a subgraph of \(T'\). So \(T'_c\) is a tree. If \(T_c\) has more edges than a tree, it must contain circle. A contradiction.
 	
-	Analyse two cases:
-	
-	\begin{enumerate}
-		\item if \(e \in T'\), \(w(e) \leq c\), then \(e \in T'_c\), a contradiction.
-		\item if \(e \not\in T'\) and \(u, v\) not connected in \(T\), we can find a circle \(u \xrightarrow{T'} v \xrightarrow{e}\), each edge of \(u \xrightarrow{T'} v\) has weight not grea
-	\end{enumerate}
+	Hence \(m_c(T) = m_c(T')\).
 	
 \end{problem}
 \begin{problem}{3}
@@ -88,8 +69,13 @@ subgraph of $G$ consisting of all edges of weight at most $c$.
 	Suppose $G$ is connected, and no two edges of $G$ have the same weight. 
 	Show that $G$ has exactly one minimum spanning tree!
 	
-	\solution
+	\solution  
+	
+	Assume that \(G\) has two different minimum spanning trees, denoted by \(T\) and \(T'\). There exist an edge \(e = \{u, v\}\), such that \(e \in T\) but \(e \not\in T'\). Consider the path \(P: u(p_1), p_2, p_3, \dots, p_{k-1}, v(p_k)\) in \(T'\). because \(T_{w(e)}\) and \(T'_{w(e)}\) have the same connected components, each edge in \(P\) has a weight cheaper than or equal to \(w(e)\), otherwise \(u\) and \(v\) will be disconnected. because no two edges of \(G\) have the same weight, then \(w(\{p_i, p_{i+1}\} < w(e) (1 \leq i < k)\). We can repalce \(e \in T\) with any edge in path \(P\) to get another spanning tree with cheaper weight sum. A contradiction.
+	
+	Hence, \(G\) has exactly one minimum spanning tree.
 \end{problem}
+
 \section*{}
 A {\em multigraph} is a graph that can have multiple edges, called
 ``parallel edges''. Without defining 
