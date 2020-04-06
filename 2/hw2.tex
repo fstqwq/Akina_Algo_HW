@@ -13,9 +13,9 @@
 \newcommand{\E}{\mathop{\mathbb{E\/}}}
 
 
-\renewcommand{\hwtitle} {CS217 Homework 2, First Submission}	
+\renewcommand{\hwtitle} {CS217 Homework 2, Final Submission}	
 \renewcommand{\hwauthor}{Akina}
-\renewcommand{\hwdate}{\today}
+\renewcommand{\hwdate}{April 3, 2020}
 
 \begin{document}
 \title{\hwtitle}
@@ -246,7 +246,7 @@ $\sum_{i \ne j} A_{i,j}$ for the number of comparisons made by quicksort).
 
 \solution
 \begin{lemma}
-$$C(\pi,k)=\sum_{i \ne k} A_{i,k}+\sum_{i \ne k} A_{k,i}+\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}$$
+$$C(\pi,k)=\sum_{i \ne k} A\sum_{i \ne j,i \ne k,j\ne k} B_{i,j,k}$$
 \end{lemma}
 \begin{proof}
 
@@ -294,10 +294,11 @@ You can use the fact that $H_n := 1 + \frac{1}{2} + \frac{1}{3} + \cdots  + \fra
             &= \sum_{i \not= 1} \frac{1}{i} + \sum_{i \not= 1} \frac{1}{i} + \sum_{2 \leq i < j \leq n} \frac{1}{j} + \sum_{2 \leq j < i \leq n}\frac{1}{i}\\
             &= \sum_{i \not= 1} \frac{1}{i} + \sum_{i \not= 1} \frac{1}{i} + \sum_{2 < j \leq n}(1 - \frac{2}{j}) + \sum_{2 < i \leq n}(1 - \frac{2}{i})\\
             &= (H_n - 1) + (H_n - 1) + (n - 2) - 2(Hn - \frac{3}{2}) + (n - 2) - 2(Hn - \frac{3}{2})\\
-            &= 2n + O(\ln n)
+			&= 2n - 2H_n + O(1) \\
+			&= 2n - 2\ln n + O(1)
         \end{split}
     \]
-    Thus, $2n + O(n)$ comparisons are made on expectation.
+    Thus, $2n - 2\ln n + O(1)$ comparisons are made on expectation.
 \end{proof}
 \end{problem}
 
@@ -307,33 +308,49 @@ Derive a formula for $\E_{\pi} [C(\pi,k)]$, up to additive terms of order $o(n)$
 You might want to introduce $\kappa := k/n$.
 
 \solution
-(See next page)
-\begin{proof}
     \[
         \begin{split}
             \E_{\pi} [C(\pi,k)] &= \E[\sum_{i \not= k}A_{i, k} + \sum_{i \not= k}A_{k, i} + \sum_{i \not= j, i \not= k,j \not= k}B_{i, j, k}]\\
             &= \sum_{i \not= k}\E[A_{i, k}] + \sum_{i \not= k}\E[A_{k, i}] + \sum_{i \not= j, i \not= k,j \not= k}\E[B_{i, j, k}]\\\\
             \sum_{i \not= k}\E[A_{i, k}] + \sum_{i \not= k}\E[A_{k, i}] &= 2\sum_{i \not= k}\frac{1}{|i - k| + 1} \\
-            &= 2(H_k + H_{n - k + 1} - 2)\\\\
-            \sum_{i \not= j, i \not= k,j \not= k}\E[B_{i, j, k}] &= (\sum_{i < j < k} + \sum_{j < i < k} + \sum_{k < i < j} + \sum_{k < j < i} + \sum_{i < k < j} + \sum_{j < k < i}) \E[B_{i, j, k}] \\\\
+			&= 2(H_k + H_{n - k + 1} - 2) \\
+			&= o(n) \\\\
+			\sum_{i \not= j, i \not= k,j \not= k}\E[B_{i, j, k}] &= (\sum_{i < j < k} + \sum_{j < i < k} + \sum_{k < i < j} + \sum_{k < j < i} + \sum_{i < k < j} + \sum_{j < k < i}) \E[B_{i, j, k}]
+		\end{split}
+	\]
+
+	Count seperately, we get 
+
+	\[
+		\begin{split}
             (\sum_{i < j < k} + \sum_{j < i < k})\E[B_{i, j, k}] &= \sum_{i < j < k}\frac{1}{k - i + 1} + \sum_{j < i < k}\frac{1}{k - j + 1}\\
             &= \sum_{1 \leq i < k - 1}1 - \frac{2}{k - i + 1} + \sum_{1 \leq j < k - 1} 1 - \frac{2}{k - j + 1}\\
-            &= 2k - 4H_k + 2\\\\
+			&= 2k - 4H_k + 2 \\
+			&= 2\kappa n + o(n)\\\\
             (\sum_{k < i < j} + \sum_{k < j < i})\E[B_{i, j, k}] &= \sum_{k < i < j}\frac{1}{j - k + 1} + \sum_{k < j < i}\frac{1}{i - k + 1}\\
             &= \sum_{k + 1 < j \leq n}1 - \frac{2}{j - k + 1} + \sum_{k + 1 < i \leq n} 1 - \frac{2}{i - k + 1}\\
             &= 2(n - k) - 4(H_{n - k + 1} - 1)\\
-            &= 2(n - k + 1) - 4H_{n - k + 1} + 2\\\\
-            (\sum_{i < k < j} + \sum_{j < k < i}) \E[B_{i, j, k}] &= \sum_{i < k < j}\frac{1}{j - i + 1} + \sum_{j < k < i}\frac{1}{i - j + 1} \\
-            &= 2(\sum_{1 \leq i < j \leq n}\frac{1}{j - i + 1} - \sum_{1 \leq i < j \leq k}\frac{1}{j - i + 1} - \sum_{k \leq i < j \leq n}\frac{1}{j - i + 1})\\
-            &= 2(((n + 1)H_n -2n) - ((k + 1)H_k -2k) - ((n - k + 1 + 1)H_{n - k + 1} - 2(n - k + 1)))\\
-            &= (2n + 2)H_n - (2k + 2)H_k - (2n - 2k + 4)H_{n - k + 1} + 4\\\\
-            \E_{\pi} [C(\pi,k)] &= (2n + 2)H_n - (2k + 4)H_k - (2n - 2k + 6)H_{n - k + 1} + 2n + 6\\
-            &= ((2n + 2) - (2k + 4)\frac{H_k}{H_n} - (2n - 2k + 6)\frac{H_{n - k + 1}}{H_n})H_n + 2n + 6\\
-            &\leq ((2n + 2) - (2k + 4)\kappa - (2n - 2k + 6)(1 - \kappa))H_{n} + 2n + 6 \\
-            &= (2\kappa(1 - \kappa)n + 2\kappa - 4)(H_n) + 2n + 6\\
-            &= 2\kappa(1 - \kappa)n\log_2(n) + 2n + O(n)
+            &= 2(n - k + 1) - 4H_{n - k + 1} + 2\\
+            &= 2(1 - \kappa) n + o(n)\\\\
+			(\sum_{i < k < j} + \sum_{j < k < i}) \E[B_{i, j, k}]
+			&= \sum_{i < k < j}\frac{1}{j - i + 1} + \sum_{j < k < i}\frac{1}{i - j + 1} \\
+			&= 2\sum_{j < k < i}\frac{1}{i - j + 1} \\
+			&= 2\sum_{j = 1} ^ {k - 1} (H_{n - j + 1} - H_{k - j + 1}) \\
+			&= 2\big(\sum_{u = n - k + 2} ^ n \ln u - \sum_{u = 1} ^ {k - 1} \ln u + 2(k - 1)o(1)\big) \\
+			&= 2\big(\sum_{u = n - k + 1} ^ n \ln u - \sum_{u = 1} ^ {k} \ln u  \ - (\ln (n - k + 1) - \ln {k}) +2(k - 1)o(1)\big)\\
+			&= 2\ln (\frac {n!} {k! (n - k)!}) + o(n)\\ 
+			&= 2(n \ln n - k \ln k - (n - k) \ln (n - k) + o(n)) + o(n)\\
+			&= 2(n \ln n - \kappa n \ln \kappa n - (1 - \kappa)n (\ln (1 - \kappa) + \ln n)) + o(n)\\
+            &= 2\big(\kappa n \ln \kappa + (1 - \kappa) n \ln(1 - \kappa)\big) + o(n) 
+		\end{split}
+	\]
+	Therefore, we get
+	\[
+		\begin{split}
+\E_{\pi} [C(\pi,k)] &= \sum_{i \not= k}\E[A_{i, k}] + \sum_{i \not= k}\E[A_{k, i}] + \sum_{i \not= j, i \not= k,j \not= k}\E[B_{i, j, k}] \\
+ &= o(n) + 2\kappa n + o(n) + 2(1 - \kappa) n + o(n) -  2\big(\kappa n \ln \kappa + (1 - \kappa) n \ln(1 - \kappa)\big) + o(n)\\
+            &= 2 \big( 1 - \kappa  \ln \kappa - (1 - \kappa)  \ln(1 - \kappa)\big) n+ o(n)
         \end{split}
     \]
-\end{proof}
 \end{problem}
 \end{document}
