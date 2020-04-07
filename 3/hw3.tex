@@ -59,7 +59,7 @@ subgraph of $G$ consisting of all edges of weight at most $c$.
 
 	\solution
 	\begin{proof}
-	Without loss of generality, let \(m_c(T) > m_c(T')\). According to \textbf{Problem 1} we know, both \(T_c\) and \(T'_c\) have the same connected components as \(G_c\), hence \(T_c\) and \(T'_c\) have the same connected components. There must exist a connected components, which contains more edges in \(T_c\) than \(T'_c\). \(T'\) does not contain circles, hence so does \(T'_c\) since it is a subgraph of \(T'\). So \(T'_c\) is a tree. If \(T_c\) has more edges than a tree, it must contain circle. A contradiction.
+	Without loss of generality, let \(m_c(T) > m_c(T')\). According to \textbf{Problem 1} we know, both \(T_c\) and \(T'_c\) have the same connected components as \(G_c\), hence \(T_c\) and \(T'_c\) have the same connected components. There must exist a connected components, which contains more edges in \(T_c\) than \(T'_c\). \(T'\) does not contain circles, hence so does \(T'_c\) since it is a subgraph of \(T'\). So the connected component of \(T'_c\) is a tree. If \(T_c\) has more edges than a tree, it must contain circle. A contradiction.
 	
 	Hence \(m_c(T) = m_c(T')\).
 	\end{proof}
