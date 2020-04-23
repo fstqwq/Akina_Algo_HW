@@ -44,11 +44,11 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 	\solution
 	Assume that \(c(e_1) \geq c(e_2) \geq \dots, \geq c(e_m)\). Each time we add an edge in order and check whether \(s\) and \(t\) are connected. If so, we stop. Assume that we stop at edge \(e_x\), \(c^* = c(e_x)\) and we can use dfs algorithm to find a path from \(s\) to \(t\) in the graph which contains \(e_1, e_2, \dots, e_x\).
 	
-	Next we anylise its complexity. In worst case, we need to add \(m\) edges and check \(m\) times. The complexity \(O(n + m)\) if we use an algorithm similar to coloring. 
+	Next we analyse its complexity. In worst case, we need to add \(m\) edges and check \(m\) times. The complexity \(O(n + m)\) if we maintain a set \(S\) of vertices which is reachable from \(s\) and a set of edges \(P\) whose endpoints not in \(S\).
 	
-	In the beginning, each node has no color except \(s\) is red and \(t\) is blue. Once an edge is added, the color will spread along the edge. If two kind of color are mixed, we can claim that \(s\) and \(t\) are connected.
+	In the beginning, \(S\) only contains \(s\). Once an edge is added, if one of its endpoints in \(S\) but the other not, do dfs algorithm on \(V \setminus S\) from the endpoint not in \(S\). Add all the vertices involved to \(S\).
 	
-	Each edge will be add once, and each node will be colored once, hence the complexity is \(O(n + m)\)
+	Each edge will be add to \(S\) once, and each node will be travelled once, hence the complexity is \(O(n + m)\)
 	
 	Together with the complexity of dfs, in conclusion, we can solve MCP in time \(O(n + m)\)
 \end{problem}
