@@ -1,6 +1,6 @@
 \documentclass[11pt,a4paper,oneside]{article}
 \usepackage[dvipsnames, svgnames, x11names]{xcolor}
-\usepackage{euler,amsthm,amsmath,amsfonts,graphicx,epigraph,indentfirst,enumerate,comment,listings,fontspec,color,subcaption,listings}
+\usepackage{euler,amssymb,amsthm,amsmath,amsfonts,graphicx,epigraph,indentfirst,enumerate,comment,listings,fontspec,color,subcaption,listings}
 \usepackage{xeCJK}
 \usepackage{hw}
 \usepackage{pythonhighlight}
@@ -14,9 +14,9 @@
 \newcommand{\R}{\mathbb{R}}
 
 
-\renewcommand{\hwtitle} {CS217 Homework 2, Final Submission}	
+\renewcommand{\hwtitle} {CS217 Homework 4, First Submission}	
 \renewcommand{\hwauthor}{Akina}
-\renewcommand{\hwdate}{April 3, 2020}
+\renewcommand{\hwdate}{April 24, 2020}
 
 \begin{document}
 \title{\hwtitle}
@@ -42,15 +42,43 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 	\statement
 	Suppose the edges $e_1,\dots,e_m$ are sorted by their capasity. Show how to solve MCP in time $O(n+m)$.
 	\solution
-	Assume that \(c(e_1) \geq c(e_2) \geq \dots, \geq c(e_m)\). Each time we add an edge in order and check whether \(s\) and \(t\) are connected. If so, we stop. Assume that we stop at edge \(e_x\), \(c^* = c(e_x)\) and we can use dfs algorithm to find a path from \(s\) to \(t\) in the graph which contains \(e_1, e_2, \dots, e_x\).
+	Assume edges sorted from higher capacity to lower. Add edge one by one and check whether \(s\) and \(t\) are connected. If so, report the last edge's capacity as the maximum capacity $C$, and it's easy to report the path with such capacity simply use searches from $s$ to $t$. See \textbf{Algorithm 1} pseudo code for detail.
+
+	The correctness is straight forward: for any path $p$ with higher capacity,it is impossible that $p$ start from $s$ and end at $t$ since they are disconnected. For the current graph with all edges with capacity at least $C$, since every simple path holds a capacity at least $C$ and $s$ and $t$ is connected, there's at least one path with such capacity $C$ connecting from $s$ to $t$.
+
+	\begin{algorithm}
+		\caption{Find MCP using sorted edges in $O(n + m)$}
+		\begin{algorithmic}[1]
+			\Function{MCP}{$V, E, c, s, t$}
+			\State $S \leftarrow \{ s \}$
+			\State $E',Relax \leftarrow \varnothing$
+			\For {$e \in E$}
+				\State $AddEdge(e)$
+				\If {$t \in S$}
+					\State \Return $\{c(e), FindPath(V, E', s, t)\}$
+					\Comment FindPath finds path $s \rightarrow t$ using trivial DFS or BFS
+				\EndIf
+			\EndFor
+			\State \Return NO SOLUTION
+			\EndFunction
+			\Function{AddEdge}{$e$}
+				\State $E' \leftarrow E' \cup e$
+				\State $Relax \leftarrow Relax \cup e$
+				\If {$e.from \in S$}
+					\State $COLOR(e.from)$
+				\EndIf
+			\EndFunction
+			\Function{COLOR}{$x$}
+				\State $S \leftarrow S \cup \{ x \}$
+				\For {$e = (x, y) \in Relax$}
+				\State $Relax \leftarrow Relax \backslash e$
+				\State $COLOR(y)$
+				\EndFor
+			\EndFunction
+		\end{algorithmic}
+	\end{algorithm}
 	
-	Next we analyse its complexity. In worst case, we need to add \(m\) edges and check \(m\) times. The complexity \(O(n + m)\) if we maintain a set \(S\) of vertices which is reachable from \(s\) and a set of edges \(P\) whose endpoints not in \(S\).
-	
-	In the beginning, \(S\) only contains \(s\). Once an edge is added, if one of its endpoints in \(S\) but the other not, do dfs algorithm on \(V \setminus S\) from the endpoint not in \(S\). Add all the vertices involved to \(S\).
-	
-	Each edge will be add to \(S\) once, and each node will be travelled once, hence the complexity is \(O(n + m)\)
-	
-	Together with the complexity of dfs, in conclusion, we can solve MCP in time \(O(n + m)\)
+	The complexity, too, is straight forward. Every edge will enter and exit $Relax$ at most once, say $O(m)$. For function $COLOR$ it will run at most $2m$ times since every edge update may cause a call of $COLOR$, and exiting $Relax$ may cause a call of $COLOR$. $FindPath$ is simply search a path using bfs or visit-once dfs, which is $O(n + m)$. Thus the algorithm solves MCP in time \(O(n + m)\).
 \end{problem}
 
 \begin{problem}{2}
@@ -64,38 +92,52 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 	\solution
 	
 	\begin{algorithm}
-		\caption{find MCP in $O(\log^* n)$}
+		\caption{Find MCP in $O(m \log^* m)$ using median of medians}
 		\begin{algorithmic}[1]
-			\Function{MCP}{$V, E, s, t, c, S, E', k$}
-			\If $|E| = 1$
-				\If {some $s$ and $t$ are connected in $(V, E \cup E')$}
-					\State \Return The path from $s$ to $t$, $c(E_0)$
+
+			\Function{MCP}{$V, E, c, s, t$}
+				\If {$s, t$ are connected in $(V, E)$}
+					\State \Return $MCP(V, E, c, s, t, \{s\}, \varnothing, 0)$
 				\Else
-					\State \Return No MCP
+					\State \Return NO SOLUTION
 				\EndIf
+			\EndFunction
+
+			\Function{Solve}{$V, E, c, s, t, S, E', k$}
+			\If {$|c(E)| = 1$}
+				\State \Return $\{c(E_0), FindPath(V, E \cup E', s, t)\}$
 			\EndIf
 			
-			\State $P \gets$ $\{0\} \cup$ median of median $k$ times on $c(E)$
-			\State $E_i \gets \{e \in E | P_i \leq c(e) \leq P_{i+1} \}$
+			\State $P \gets$ $\{0\} \cup GetPivot(c(E), k) \cup  \{+\infty\}$ 
+			\State $E_i \gets \{e \in E | P_i < c(e) \leq P_{i+1} \}$
 
-			\For {$ i= 2^k \to 0$}  
+			\For {$ i= |P| - 1 \to 1$}  
 				\State $S' \gets$ the connected component of $S$ in $(V, E' \cup E_i)$
 				\If {$t \in S'$}
-					\State \Return {$MCP(V, E', s, t, c, S, E', k+1)$}
+					\State \Return {$Solve(V, E_i, c, s, t, S, E', k+1)$}
 				\EndIf
 				\State $E' \gets E' \cup E_i$
 				\State $S \gets S'$
 			\EndFor
-			\State \Return No MCP
+			\EndFunction
+			\Function{GetPivot}{$S, k$}
+				\State $P \leftarrow MedianOfMedians(S)$
+				\If {$k = 0$}
+					\State \Return $\{P\}$
+				\Else
+					\State \Return $GetPivot(\{s | s < P\}, k - 1) \cup \{P\} \cup GetPivot(\{s | s > P\}, k - 1)$
+				\EndIf
 			\EndFunction
 		\end{algorithmic}
 	\end{algorithm}
 
-	Now we analyze the alogirhtm's complexity. Each recursion the edge set \(E\) is divided into \(2^k\) parts, where \(k\) is the number of recursions. We achive it by choosing \(2^k\) pivot using median of median algorithm, which can be done in \(O(m)\). To check whether \(t \in S\), we can use the algorithm in \textbf{Problem 1}, by which we only need \(O(n+m)\) time to check it in a series of edge adding operations. Hence each recursoin, we need \(O(m)\) time to have all this done.
+	The pseudo code \textbf{Algorithm 2} described our solution in $O(m \log ^ * m)$.
+
+	Consider its complexity. Each recursion the edge set \(E\) is divided into \(2^k\) parts, where \(k\) is the number of recursions. We achive it by choosing \(2^k\) pivot using median of median algorithm, which can be done in \(O(m)\). To check whether \(t \in S\), we can use the algorithm in \textbf{Problem 1}, by which we only need \(O(n+m)\) time to check it in a series of edge adding operations. Hence each recursoin, we need \(O(m)\) time to have all this done.
 	
 	What important is the number of recursions. Assume that the number is \(k\). \(k\) is the smallest integer greater than \(0\) and satisfying:
 	
-	\[2^{2^{2^{2^{\dots}}} \left\{k \text{times} \right.} \geq m\]
+	\[2^{2^{2^{2^{\dots}}} \left\{k \text{ times} \}\right.} \geq m\]
 	
 	In other word, the number of recursions is \(\log^* m\). So the total complexity is \(O(mlog^*m\), which is better than \(O(m\log\log m)\) and \(O(m\log\log\log m)\) and so on.
 	
