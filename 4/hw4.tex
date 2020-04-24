@@ -68,7 +68,7 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 		\begin{algorithmic}[1]
 			\Function{MCP}{$V, E, s, t, c, S, E', k$}
 			\If $|E| = 1$
-				\If {some $x \in S$ and $t$ are connected in $(V, E \cup E')$}
+				\If {some $s$ and $t$ are connected in $(V, E \cup E')$}
 					\State \Return The path from $s$ to $t$, $c(E_0)$
 				\Else
 					\State \Return No MCP
@@ -76,7 +76,7 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 			\EndIf
 			
 			\State $P \gets$ $\{0\} \cup$ median of median $k$ times on $c(E)$
-			\State $E_i \gets \{e \in E | P_{i-1} \leq c(e) \leq P_i\}$
+			\State $E_i \gets \{e \in E | P_i \leq c(e) \leq P_{i+1} \}$
 
 			\For {$ i= 2^k \to 0$}  
 				\State $S' \gets$ the connected component of $S$ in $(V, E' \cup E_i)$
