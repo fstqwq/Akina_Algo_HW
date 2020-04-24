@@ -64,38 +64,49 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 	\solution
 	
 	\begin{algorithm}
-		\caption{Untitled}
+		\caption{find MCP in $O(\log^* n)$}
 		\begin{algorithmic}[1]
-			\Function{Untitled}{$V, E, s, t, c$}
-			\State $E' \gets E$
-			\State $idx \gets 0$
-			\While {$|E'| > 0$}
-				\State $p \gets$ median of $c(E)$
-				\State $E_{idx} \gets \{e \in E' | c(e) \geq p\}$
-				\State $E' \gets \{e \in E' | c(e) < p\}$
-				\State $idx \gets idx + 1$
-			\EndWhile
-			\State $E' \gets \emptyset$
-			\State $S \gets \{s\}$
-			\For {$ i= idx - 1 \to 0$}  
-				\State $E' \gets E' \cup E_i$
-				\For {$\{u, v\} \in E'$}
-					\State $S' \gets dfs(V \setminus S, E', u) \cup dfs(V \setminus S, E', v)$
-					\State $S \gets S'$
-				\EndFor
-				\If {$t \in S$}
-					\State \Return {$Untitled(V, E_i, s, t, c)$}
+			\Function{MCP}{$V, E, s, t, c, S, E', k$}
+			\If $|E| = 1$
+				\If {some $x \in S$ and $t$ are connected in $(V, E \cup E')$}
+					\State \Return The path from $s$ to $t$, $c(E_0)$
+				\Else
+					\State \Return No MCP
 				\EndIf
+			\EndIf
+			
+			\State $P \gets$ $\{0\} \cup$ median of median $k$ times on $c(E)$
+			\State $E_i \gets \{e \in E | P_{i-1} \leq c(e) \leq P_i\}$
+
+			\For {$ i= 2^k \to 0$}  
+				\State $S' \gets$ the connected component of $S$ in $(V, E' \cup E_i)$
+				\If {$t \in S'$}
+					\State \Return {$MCP(V, E', s, t, c, S, E', k+1)$}
+				\EndIf
+				\State $E' \gets E' \cup E_i$
+				\State $S \gets S'$
 			\EndFor
 			\State \Return No MCP
 			\EndFunction
 		\end{algorithmic}
 	\end{algorithm}
+
+	Now we analyze the alogirhtm's complexity. Each recursion the edge set \(E\) is divided into \(2^k\) parts, where \(k\) is the number of recursions. We achive it by choosing \(2^k\) pivot using median of median algorithm, which can be done in \(O(m)\). To check whether \(t \in S\), we can use the algorithm in \textbf{Problem 1}, by which we only need \(O(n+m)\) time to check it in a series of edge adding operations. Hence each recursoin, we need \(O(m)\) time to have all this done.
+	
+	What important is the number of recursions. Assume that the number is \(k\). \(k\) is the smallest integer greater than \(0\) and satisfying:
+	
+	\[2^{2^{2^{2^{\dots}}} \left\{k \text{times} \right.} \geq m\]
+	
+	In other word, the number of recursions is \(\log^* m\). So the total complexity is \(O(mlog^*m\), which is better than \(O(m\log\log m)\) and \(O(m\log\log\log m)\) and so on.
 	
 \end{problem}
 \begin{problem}{3}
 	\statement
 	Give an algorithm for MCP that runs in time $O(m \log \log \log m)$? How about $O(m \log \log \log \log m)$? How far can you get?
+	
+	\solution
+	
+	See \textbf{Problem 2}.
 
 \end{problem}
 
