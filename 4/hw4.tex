@@ -97,32 +97,35 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 
 			\Function{MCP}{$V, E, c, s, t$}
 				\If {$s, t$ are connected in $(V, E)$}
-					\State \Return $MCP(V, E, c, s, t, \{s\}, \varnothing, 0)$
+					\State \Return $MCP(V, E, c, s, t, \{s\}, \varnothing, 1)$
 				\Else
 					\State \Return NO SOLUTION
 				\EndIf
 			\EndFunction
 
-			\Function{Solve}{$V, E, c, s, t, S, E', k$}
+			\Function{Solve}{$V, E, c, s, t, S, D, k$}
 			\If {$|c(E)| = 1$}
-				\State \Return $\{c(E_0), FindPath(V, E \cup E', s, t)\}$
+				\State \Return $\{c(E_0), FindPath(V, E \cup D, s, t)\}$
 			\EndIf
 			
 			\State $P \gets$ $\{0\} \cup GetPivot(c(E), k) \cup  \{+\infty\}$ 
 			\State $E_i \gets \{e \in E | P_i < c(e) \leq P_{i+1} \}$
 
-			\For {$ i= |P| - 1 \to 1$}  
-				\State $S' \gets$ the connected component of $S$ in $(V, E' \cup E_i)$
+			\For {$ i= |P| - 2 \to 0$}  
+				\State $S' \gets$ the connected component of $S$ in $(V, D \cup E_i)$
 				\If {$t \in S'$}
-					\State \Return {$Solve(V, E_i, c, s, t, S, E', k+1)$}
+					\State \Return {$Solve(V, E_i, c, s, t, S, D, k 2 ^ k)$}
 				\EndIf
-				\State $E' \gets E' \cup E_i$
+				\State $D \gets D \cup E_i$
 				\State $S \gets S'$
 			\EndFor
 			\EndFunction
 			\Function{GetPivot}{$S, k$}
+				\If {$S = \varnothing$}
+					\State \Return $\varnothing$
+				\EndIf
 				\State $P \leftarrow MedianOfMedians(S)$
-				\If {$k = 0$}
+				\If {$k = 1$ or $|S| = 1$}
 					\State \Return $\{P\}$
 				\Else
 					\State \Return $GetPivot(\{s | s < P\}, k - 1) \cup \{P\} \cup GetPivot(\{s | s > P\}, k - 1)$
@@ -131,15 +134,22 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 		\end{algorithmic}
 	\end{algorithm}
 
-	The pseudo code \textbf{Algorithm 2} described our solution in $O(m \log ^ * m)$.
 
-	Consider its complexity. For each recursion, the edge set \(E\) is divided into \(2^k\) parts, where \(k\) is the number of recursions. We achieve it by choosing \(2^k\) pivot using median of medians algorithm, which can be done in \(O(m)\). To check whether \(t \in S\), we can use the algorithm in \textbf{Problem 1}, by which we only need \(O(n+m)\) time with a series of edge adding operations. Hence for each recursoin, we need \(O(m)\) time to have all things done.
+	The pseudo code \textbf{Algorithm 2} described our solution. The main idea is: on each level we divided edges in to certain blocks using median of median in order to achieve a total $O(m)$. Adding edges in blocks like \textbf{Algorithm 1} until $s, t$ are connected, and recursively solve the subproblem in the current block, while keeping determined edges in previous blocks.
+
+	Consider the complexity of such algorithm. Each iteration, say current block size is $m / k$, it takes $O(m)$ to divide current block into $2 ^ k$ parts applying MoM recursively, and $k$ increase to $k 2 ^ k$ in the recursion. When $k \geq |E|$ the algorithm will stop in at most $1$ iteration, since edges are equal capacity in each block. Note that $k \rightarrow k 2 ^ k$ grows extremely fast, for example
+
+	$$ 1 \rightarrow 2 \rightarrow 8 \rightarrow 2048 \rightarrow 2 ^ {2060} \rightarrow \cdots$$
 	
-	Now what important is the number of recursions. Assume that the number is \(k\). \(k\) is the smallest integer greater than \(0\) and satisfying:
+	We have a better notation for it, that \(\lceil \log^* m \rceil\), defined as $$
+		\log ^ * n =
+		\begin{cases}
+			0, &n \leq 1 \\
+			1 + \log^*(\log n), &n > 1
+		\end{cases}
+	$$
 	
-	\[\overbrace{2 \cdot 2^2 \cdot 2^{2^2} \dots}^{k \text{terms}} \geq m\]
-	
-	In other word, the number of recursions is \(\lceil \log^* m \rceil\). So the total complexity is \(O(mlog^*m)\), which is better than \(O(m\log\log m)\) and \(O(m\log\log\log m)\) and so on.
+	So the total complexity is \(O(mlog^*m)\), which is better than \(O(m\log\log m)\) and \(O(m\log\log\log m)\) and so on.
 	
 \end{problem}
 \begin{problem}{3}
