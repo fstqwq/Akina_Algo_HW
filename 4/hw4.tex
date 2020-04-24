@@ -133,13 +133,13 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 
 	The pseudo code \textbf{Algorithm 2} described our solution in $O(m \log ^ * m)$.
 
-	Consider its complexity. Each recursion the edge set \(E\) is divided into \(2^k\) parts, where \(k\) is the number of recursions. We achive it by choosing \(2^k\) pivot using median of median algorithm, which can be done in \(O(m)\). To check whether \(t \in S\), we can use the algorithm in \textbf{Problem 1}, by which we only need \(O(n+m)\) time to check it in a series of edge adding operations. Hence each recursoin, we need \(O(m)\) time to have all this done.
+	Consider its complexity. For each recursion, the edge set \(E\) is divided into \(2^k\) parts, where \(k\) is the number of recursions. We achieve it by choosing \(2^k\) pivot using median of medians algorithm, which can be done in \(O(m)\). To check whether \(t \in S\), we can use the algorithm in \textbf{Problem 1}, by which we only need \(O(n+m)\) time with a series of edge adding operations. Hence for each recursoin, we need \(O(m)\) time to have all things done.
 	
-	What important is the number of recursions. Assume that the number is \(k\). \(k\) is the smallest integer greater than \(0\) and satisfying:
+	Now what important is the number of recursions. Assume that the number is \(k\). \(k\) is the smallest integer greater than \(0\) and satisfying:
 	
-	\[2^{2^{2^{2^{\dots}}} \left\{k \text{ times} \}\right.} \geq m\]
+	\[\overbrace{2 \cdot 2^2 \cdot 2^{2^2} \dots}^{k \text{terms}} \geq m\]
 	
-	In other word, the number of recursions is \(\log^* m\). So the total complexity is \(O(mlog^*m\), which is better than \(O(m\log\log m)\) and \(O(m\log\log\log m)\) and so on.
+	In other word, the number of recursions is \(\lceil \log^* m \rceil\). So the total complexity is \(O(mlog^*m)\), which is better than \(O(m\log\log m)\) and \(O(m\log\log\log m)\) and so on.
 	
 \end{problem}
 \begin{problem}{3}
