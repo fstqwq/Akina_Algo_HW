@@ -62,17 +62,17 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 			\State \Return NO SOLUTION
 			\EndFunction
 			\Function{AddEdge}{$e$}
-				\State $E' \leftarrow E' \cup e$
+				\State $E' \leftarrow E' \cup \{e\}$
 				\If {$e.from \in S$}
 					\State $COLOR(e.to)$
 				\Else
-					\State $Relax \leftarrow Relax \cup e$
+					\State $Relax \leftarrow Relax \cup \{e\}$
 				\EndIf
 			\EndFunction
 			\Function{COLOR}{$x$}
 				\State $S \leftarrow S \cup \{ x \}$
 				\For {$e = (x, y) \in Relax$}
-				\State $Relax \leftarrow Relax - e$
+				\State $Relax \leftarrow Relax \backslash \{e\}$
 				\State $COLOR(y)$
 				\EndFor
 			\EndFunction
