@@ -63,22 +63,23 @@ c(p) := \min_{1 \leq i \leq t} c( \{u_{i-1}, u_i\}) \ .
 			\EndFunction
 			\Function{AddEdge}{$e$}
 				\State $E' \leftarrow E' \cup e$
-				\State $Relax \leftarrow Relax \cup e$
 				\If {$e.from \in S$}
-					\State $COLOR(e.from)$
+					\State $COLOR(e.to)$
+				\Else
+					\State $Relax \leftarrow Relax \cup e$
 				\EndIf
 			\EndFunction
 			\Function{COLOR}{$x$}
 				\State $S \leftarrow S \cup \{ x \}$
 				\For {$e = (x, y) \in Relax$}
-				\State $Relax \leftarrow Relax \backslash e$
+				\State $Relax \leftarrow Relax - e$
 				\State $COLOR(y)$
 				\EndFor
 			\EndFunction
 		\end{algorithmic}
 	\end{algorithm}
 	
-	The complexity, too, is straight forward. Every edge will enter and exit $Relax$ at most once, say $O(m)$. For function $COLOR$ it will run at most $2m$ times since every edge update may cause a call of $COLOR$, and exiting $Relax$ may cause a call of $COLOR$. $FindPath$ is simply search a path using bfs or visit-once dfs, which is $O(n + m)$. Thus the algorithm solves MCP in time \(O(n + m)\).
+	The complexity, too, is straight forward. Every edge will enter and exit $Relax$ at most once, say $O(m)$. For function $COLOR$, it will run at most $m$ times since every edge update may cause a call of $COLOR$, or an entering of $Relax$ plus an exiting call of $COLOR$. $FindPath$ is simply search a path using bfs or visit-once dfs, which is $O(n + m)$. Thus the algorithm solves MCP in time \(O(n + m)\).
 \end{problem}
 
 \begin{problem}{2}
