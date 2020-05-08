@@ -16,9 +16,9 @@
 \newcommand{\norm}[1]{\|#1\|}
 
 
-\renewcommand{\hwtitle} {CS217 Homework 4, First Submission}	
+\renewcommand{\hwtitle} {CS217 Homework 5, First Submission}	
 \renewcommand{\hwauthor}{Akina}
-\renewcommand{\hwdate}{April 24, 2020}
+\renewcommand{\hwdate}{May 8, 2020}
 
 \begin{document}
 \title{\hwtitle}
@@ -29,7 +29,7 @@
 
 
 \setcounter{section}{4}
-\section{Flows with Vertex Capacities}
+\section*{Flows with Vertex Capacities}
 
 
 \begin{problem}{1}
@@ -42,7 +42,7 @@
     SOLUTION
 \end{problem}
 
-\subsection{Vertex Disjoint Paths}
+\section*{Vertex Disjoint Paths}
 
 Let $G$ be a directed graph. Two paths $p_1, p_2$ from $s$ to $t$ are called {\em vertex disjoint}
 if they don't share any vertices except $s$ and $t$. 
@@ -92,7 +92,27 @@ i.e., those vertices $u$ having exactly $i$ coordinates which are $1$.
   has a matching of size $|L_i| = {n \choose i}$.
   
   \solution
-  SOLUTION
+  \begin{proof}
+    $|L_i| = {n \choose i}$, $|L_{i + 1}| =  {n \choose {i + 1}}$. Consider build a flow network from $s$ to $t$ that:
+    \begin{enumerate}
+      \item $s$ connected to all nodes in $L_i$ with capacity $1$
+      \item all nodes in $L_{i + 1}$ connected to $t$ with capacity $1$
+      \item preserve all edges in the bipartite graph formed by $L_{i}, L_{i + 1}$, assign them with capacity $1$ and direction from $L_{i}$ to $L_{i + 1}$
+    \end{enumerate}
+    The maximum flow is at most $|L_{i}|$, since there's a cut $\{s\}$ that the sum of capacity of edges across the cut is $L_{i}$. We are to prove that maximum flow is at least $|L_{i}|$. 
+
+    Nodes in $L_{i}$ has $u := n - i$ out degree each -- they have $i$ ones and $n - i$ zeros, and connected to those who change a zero to one. Similarly, nodes in $L_{i + 1}$ has $v := i + 1$ in degree each. Since $i < n / 2$, $u \geq v$. Now we assign flows in edges:
+    \begin{enumerate}
+      \item $s$ connected to all nodes in $L_i$ : $1$
+      \item all nodes in $L_{i + 1}$ connected to $t$ : $\frac {{n \choose i}} {{n \choose {i + 1}}} = \frac {i + 1} {n - i} = \frac v u$
+      \item all edges in the bipartite graph formed by $L_{i}, L_{i + 1}$ : $\frac 1 u$
+    \end{enumerate}
+ 
+    It's obvious that such assignment satisfies all flow condition and has a value of $|L_i|$. So maximum flow is at least $L_i$. With previous arguments, the maximum flow \textit{equals to} $|L_i|$.
+ 
+    Node that the capacity of edges are all integers, we can always obtain a integral flow by algorithm like dinic. Pick all the edges from $L_{i}$ to $L_{i + 1}$ with flow passes by, it's a matching with size $|L_i|$.
+    
+  \end{proof}
 \end{problem}
 
 
@@ -103,15 +123,18 @@ i.e., those vertices $u$ having exactly $i$ coordinates which are $1$.
   $|L_i| = {n \choose i} = { n \choose n-i}  = L_{n-i}$, so the 
   $L_i$ and $L_{n-i}$ have the same size.   Show that there are ${n \choose i}$ paths $p_1,p_2,\dots,p_{ {n \choose i}}$
   in $H_n$ such that
-  (i) each $p_i$ starts in $L_i$ and ends in $L_{n-i}$;
+
+  (i) each $p_i$ starts in $L_i$ and ends in $L_{n-i}$; \\
   (ii) two different paths $p_i,p_j$ do not share any vertices.
   
     \solution
-    SOLUTION
+    \begin{proof}
+      It's nearly the same way as task $4$ to solve this problem, and use task $3$'s technique to avoid path intersection.  
+    \end{proof}
 \end{problem}
 
 
-\subsection{Matchings and Vertex Covers}
+\section*{Matchings and Vertex Covers}
 
 The following exercise was on the final exam of CS 499 (mathematical foundations of computer science) in spring 2019.
 
