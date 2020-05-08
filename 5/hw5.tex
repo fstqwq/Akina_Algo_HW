@@ -143,6 +143,12 @@ i.e., those vertices $u$ having exactly $i$ coordinates which are $1$.
     \solution
     \begin{proof}
       It's nearly the same way as task $4$ to solve this problem, and use task $3$'s technique to avoid path intersection.  
+
+      We now construct a flow graph from $s$ to $t$. Pick all nodes and edges between $L_i$ and $L_{n - i}$, assign edges with direction from lower labels to higher. Connect $s$ to all nodes in $L_i$, and all nodes in $L_{n - i}$ to $t$. What's more we split nodes in $L_i \cdots L_{n - i}$ each into two, one takes all in degree and another takes all out degree, and connected an edge from \textit{in} to \textit{out}, calling it \textit{inner edge}. Assign all edges with capacity $1$.
+
+      Now consider construct a flow. All \textit{inner edges} in $L_x$ take flow of $\frac {|L_x|} {|L_i|}$, which is not greater than $1$ obviously. All edge from $L_{x}$ to $L_{x + 1}$ take flow $\frac {|L_x|} {|L_i| \cdot (n - x)}$. All edges from $S$ or to $T$ take flow $1$.
+      
+      It's a proper flow in the graph, simply observing its symmetricity. Considering that the cut $\{s\}$ is a cut with value $|L_i|$, the maximum flow is $|L_i|$. By dinic there's another integral maximum flow, so by result of task $3$ we can announce two properties hold if we obtain paths by spliting this flow.
     \end{proof}
 \end{problem}
 
