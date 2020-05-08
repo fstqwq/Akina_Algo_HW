@@ -39,7 +39,11 @@
     value $k$.
     
     \solution
-    SOLUTION
+    There must be a minimum $r-t$-cut in graph $G$, denoted $S_{r-t}$. Then  either $s \in S_{r-t}$ or $s \in V \backslash S_{r-t} $.\\
+    If $s \in S_{r-t}$, then $S_{r-t}$ is also a $s - t$-cut. If we denote the minimum $s-t$-cut $S_{s-t}$, then $cap(S_{r-t}) \ge cap(S_{s-t})$. Applying the max-flow-min-cut theorem, $cap(S_{s-t})$ is the maxflow, which is not less than $k$. Accordingly, $cap(S_{r-t}) \ge cap(S_{s-t}) \ge k$.\\
+    If $s \in V \backslash S_{r-t}$, then $S_{r-t}$ is also a $r - s$-cut. Similarly, $cap(S_{r-t}) \ge k$.\\
+    Hence, $cap(S_{r-t}) \ge k$ in both condition. Then apply the max-flow-min-cut theorem again, the maximum $r - t$-flow value $maxflow = mincut = cap(S_{r - t}) \ge k$.\\
+    Therefore there exists an $r-t$-flow of value $k$;
 \end{problem}
 
 \section*{Vertex Disjoint Paths}
@@ -64,7 +68,16 @@ if they don't share any vertices except $s$ and $t$.
    second, one of them must occur (this requires a tool from the lecture).
    
     \solution
-    SOLUTION
+    First, prove not both cases above can occur.\\
+    For any graph $G$ with $k$ vertex disjoint paths, any $v \in V \backslash \{ s,t \}$ can occur in at most 1 path $p$, for no two $p_i,p_j$ share any vertex besides $s$ and $t$. So the rest of $k - 1$ paths remains existent. By removing a $v \in V \backslash \{ s,t \}$, the number of disjoint paths at most decrease by 1. So $G - {v_1,\dots,v_{k - 1}}$ contains at least 1 $s-t$-path. So case 2 doesn't occur.\\
+    Second, prove one of them must occur.\\
+    We can create a new directed graph $G'$.\\
+    Consider all the $v_i \in V \backslash \{ s,t \}$, for any edge $(u,v_i)$ in $G$, there's an edge $(u,{v_{in}}_i)$ in $G'$. And for any edge $(v_i,u)$ in $G$, there's an edge $({v_{out}}_i,u)$ in $G'$. All the edges above has an infinite capacity.\\
+    There are also 1-capacity edges $({v_{in}}_i,{v_{out}}_i) ,\forall i$ in $G'$.\\
+    It is obvious that the maximum flow of $G'$ is the number of disjoint $s-t$-path in $G$, for any flow on $s-t$ path is limited by 1 and any of two joint paths share at least one 1-capacity edge.\\
+    If case 1 doesn't occur, then there's at most $k - 1$ vertex disjoint $s-t$-paths, means the maximum flow of $G'$ is at most $k - 1$. So the minimum cut of $G'$ is also less than $k - 1$. Therefore, there exists a minimum cut $S$ such that $\exists v_1,\dots,v_{k-1} \in V \backslash \{ s,t \}$, ${v_{in}}_1,\dots,{v_{in}}_{k-1} \in S$, while ${v_{out}}_1,\dots,{v_{out}}_{k-1} \notin S$. So in $G-{v_1,\dots, v_{k - 1}}$ there's no $s-t$-path, case 2 occuring.\\
+    Accordingly, Menger's theorem holds.
+
 \end{problem}
 
 
