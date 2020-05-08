@@ -69,7 +69,7 @@ if they don't share any vertices except $s$ and $t$.
    
     \solution
     First, prove not both cases above can occur.\\
-    For any graph $G$ with $k$ vertex disjoint paths, any $v \in V \backslash \{ s,t \}$ can occur in at most 1 path $p$, for no two $p_i,p_j$ share any vertex besides $s$ and $t$. So the rest of $k - 1$ paths remains existent. By removing a $v \in V \backslash \{ s,t \}$, the number of disjoint paths at most decrease by 1. So $G - {v_1,\dots,v_{k - 1}}$ contains at least 1 $s-t$-path. So case 2 doesn't occur.\\
+    For any graph $G$ with $k$ vertex disjoint paths, any $v \in V \backslash \{ s,t \}$ can occur in at most 1 path $p$, for no two $p_i,p_j$ share any vertex besides $s$ and $t$. So the rest of $k - 1$ paths remains existent. By removing a $v \in V \backslash \{ s,t \}$, the number of disjoint paths at most decrease by 1. So $G - \{v_1,\dots,v_{k - 1}\}$ contains at least 1 $s-t$-path. So case 2 doesn't occur.\\
     Second, prove one of them must occur.\\
     We can create a new directed graph $G'$.\\
     Consider all the $v_i \in V \backslash \{ s,t \}$, for any edge $(u,v_i)$ in $G$, there's an edge $(u,{v_{in}}_i)$ in $G'$. And for any edge $(v_i,u)$ in $G$, there's an edge $({v_{out}}_i,u)$ in $G'$. All the edges above has an infinite capacity.\\
@@ -146,7 +146,7 @@ i.e., those vertices $u$ having exactly $i$ coordinates which are $1$.
 
       We now construct a flow graph from $s$ to $t$. Pick all nodes and edges between $L_i$ and $L_{n - i}$, assign edges with direction from lower labels to higher. Connect $s$ to all nodes in $L_i$, and all nodes in $L_{n - i}$ to $t$. What's more we split nodes in $L_i \cdots L_{n - i}$ each into two, one takes all in degree and another takes all out degree, and connected an edge from \textit{in} to \textit{out}, calling it \textit{inner edge}. Assign all edges with capacity $1$.
 
-      Now consider construct a flow. All \textit{inner edges} in $L_x$ take flow of $\frac {|L_x|} {|L_i|}$, which is not greater than $1$ obviously. All edge from $L_{x}$ to $L_{x + 1}$ take flow $\frac {|L_x|} {|L_i| \cdot (n - x)}$. All edges from $S$ or to $T$ take flow $1$.
+      Now consider construct a flow. All \textit{inner edges} in $L_x$ take flow of $\frac {|L_i|} {|L_x|}$, which is not greater than $1$ obviously. All edge from $L_{x}$ to $L_{x + 1}$ take flow $\frac {|L_i|} {|L_x| \cdot (n - x)}$. All edges from $S$ or to $T$ take flow $1$.
       
       It's a proper flow in the graph, simply observing its symmetricity. Considering that the cut $\{s\}$ is a cut with value $|L_i|$, the maximum flow is $|L_i|$. By dinic there's another integral maximum flow, so by result of task $3$ we can announce two properties hold if we obtain paths by spliting this flow.
     \end{proof}
@@ -180,19 +180,18 @@ three minimum vertex covers. The five-cycle $C_5$ has $\nu(C_5) = 2$ but has fiv
    at most $f(k)$ minimum vertex covers? How small a function $f$ can you obtain?
    
     \solution   
-    Select a maximum matching $M$ of $G$ with $|M|=k$. 
+    Select a maximum matching $M$ of $G$ with $|M|=k$. And define $M' := \{u, v|\{u, v\} \in M\}$.
     If both vertex of an edge in $G$ aren't included in $M$, then this edge can be added into $M$ to make a larger matching, 
     so every edge of $G$ has at least 1 vertex in $M$.
     
 	
-	For a minimum vertex cover $C$,define $C\cap M = N$ and $G'=\{ e\in E | e\cup N=\emptyset\}$. 
-	Because every edge of $G$ has at least 1 vertex in $M$, all edges in $G'$ has at least 1 vertex in $M/N$, which means the vertex won't appear in $C$. 
-	If there is a edge in $G'$ with both vertexes in $M/N$, then this edge isn't covered by $C$. 
-	For every edge in $G'$ with one vertex in $M/N$, the other vertex should be included in $C$ to cover this edge, 
-	and by adding these vertexes a minimum vertex cover is made.
+	For any vertex cover $C$, define $N := C\cap M'$ and $G' :=\{ e\in E | e\cap N=\emptyset\}$. Claim that no different vertex cover $C'$ satisfying $C' \cap M' = N$. We prove it by constructing.
+	
+	Because every edge of $G$ has at least 1 vertex in $M'$, all edges in $G'$ has at least 1 vertex in $M'/N$. The first case is that both vertices are in $M'/N$, by hypothesis, the edge won't be covered by $C$, so this case will not occur. The second case is that exactly one vertex in $M'/N$, then the other vertex should be included in $C$ to cover this edge. 
+	By adding these vertices a vertex cover is made. And we have no other choice to make a different vertex cover, proving the claim.
 	Therefore, $C$ can be generated with $N$ in a definite way.
 
-	Because $M$ has k edges and in each edge at least 1 vertex should be included to cover itself, there exists at most $3^k$ ways to select $N$ from $M$.
+	Because $M$ has k edges and in each edge at least 1 vertex should be included to cover itself, there exists at most $3^k$ ways to select $N$ from $M'$, and all legal minimum vertex cover can be generated with different $N$.
 	Therefore the number of minimum vertex covers is $3^k$ at most.
 	$f(k)=3^k$ can be obtained, and it's exactly the number of minimum vertex covers when $G$ is composed of k triangle $K_3$.
 \end{problem}
