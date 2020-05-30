@@ -1,0 +1,156 @@
+\documentclass[11pt,a4paper,oneside]{article}
+\usepackage[dvipsnames, svgnames, x11names]{xcolor}
+\usepackage{euler,amssymb,amsthm,amsmath,amsfonts,graphicx,epigraph,indentfirst,enumerate,comment,listings,fontspec,color,subcaption,listings}
+\usepackage{xeCJK}
+\usepackage{hw}
+\usepackage{pythonhighlight}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\nth}[1]{#1\textsuperscript{th}}
+\newcommand{\E}{\mathop{\mathbb{E\/}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\sol}{\textup{\textrm{sol}}}
+\newcommand{\val}{\textnormal{val}}
+\newcommand{\opt}{\textup{\textrm{opt}}}
+\newcommand{\norm}[1]{\|#1\|}
+\newcommand{\rank}{\textnormal{rank}}
+\renewcommand{\a}{\mathbf{a}}
+\renewcommand{\b}{\mathbf{b}} 
+
+
+\renewcommand{\hwtitle} {CS217 Homework 5, First Submission}	
+\renewcommand{\hwauthor}{Akina}
+\renewcommand{\hwdate}{May 8, 2020}
+
+\begin{document}
+\title{\hwtitle}
+\author{\hwauthor}
+\date{\hwdate}
+\maketitle
+
+
+\section*{Matching LP and Vertex Cover LP}
+
+
+
+Let $G=(V,E)$ be a 
+graph and consider the Vertex Cover Linear Program $\textrm{VCLP}(G)$:
+\begin{align*}
+\textrm{VCLP($G$)}: \qquad
+\begin{array}{lrl}
+\textnormal{minimize} \quad & \multicolumn{2}{l}{\sum_{u \in V} y_u} \\
+\textnormal{subject to} \quad & y_u + y_v  & \geq 1 \quad \forall\ \textnormal{ edges } \{u,v\} \in E\\
+& \y & \geq \mathbf{0}  
+\end{array}
+\end{align*}
+Every vertex cover of $G$ corresponds to a feasible solution $\y \in \sol(\textrm{VCLP}(G))$, but not 
+vice versa. However, every $\y \in \sol(\textrm{VCLP}(G)) \cap \{0,1\}^V$ does.
+Let $\tau(G)$ denote the size of a minimum vertex cover of $G$. In class, we showed that
+$\tau(G) = \val(\textrm{VCLP}(G))$ for all {\em bipartite} graphs $G$. We achieved this by taking
+an arbitrary feasible solution $\y$ and ``shaking'' it until it becomes integral, while making sure
+its value does not go up.\\
+
+
+Next, recall the Matching Linear Program $\textrm{MLP}(G)$:
+\begin{align*}
+\textrm{MLP($G$)}: \qquad
+\begin{array}{lrl}
+\textnormal{maximize} \quad & \multicolumn{2}{l}{\sum_{e \in E} x_e} \\
+\textnormal{subject to} \quad & \sum_{e \in E: u \in e} x_e  & \leq 1 \quad \forall\ u \in V \\
+& \x & \geq \mathbf{0}  
+\end{array}
+\end{align*}
+Every matching of $G$ corresponds to a feasible solution $\x \in \sol(\textrm{MLP}(G))$, but not 
+vice versa. However, every $\x \in \sol(\textrm{MLP}(G)) \cap \{0,1\}^E$ does.
+
+\begin{problem}{1}
+	\statement
+   Let $\nu(G)$ denote the size of a maximum matching of $G$. 
+   Obviously, $ \val(\textrm{MLP}(G)) \geq \nu(G)$ for all graphs.
+   Show that
+   $\nu(G) = \val(\textrm{MLP}(G))$ for all {\em bipartite} graphs $G$.
+   
+    \solution
+    
+\end{problem}
+
+\begin{problem}{2}
+  \statement
+ We know that $\nu(G) = \tau(G)$ for all bipartite graphs (K\H{o}nig's Theorem) and
+ $\nu(G) \leq \tau(G)$ for all graphs (since every matched edge must be covered
+ by a distinct vertex). Show that $\tau(G) \leq 2 \, \nu(G)$ for all graphs $G$.   
+  
+  \solution
+  
+\end{problem}
+
+
+\begin{problem}{3}
+	\statement
+     Show that $\tau(G) \leq 2\, \opt(\textrm{VCLP}(G))$ for all graphs $G$ (including non-bipartite graphs).
+  
+    \solution
+    
+\end{problem}
+
+
+
+\textbf{Basic Solutions.} Recall our definition of basic solutions.
+Let $P$ be the following linear program.
+\begin{align*}
+P: \qquad
+\begin{array}{lrl}
+\textnormal{maximize} \quad & \multicolumn{2}{l}{\mathbf{c}^T \x} \\
+\textnormal{subject to} \quad & A\x & \leq \b \ 
+\end{array}
+\end{align*}
+where we translated the constraint $\x \geq 0$ into $n$ constraints
+$-x_i \leq 0$ and integrated them into $A$, so 
+the $n$ last rows of $A$ form the 
+negative identity matrix $-I_n$. We introduce some notation: $\a_i$ is the $\nth{i}$ row of $i$;
+for $I \subseteq [m+n]$ let $A_I$ be the matrix
+consisting of the rows $\a_i$ for $i \in I$.
+\begin{definition}
+	For $\x \in \R^n$ let $I(\x) := \{i \in [m+n] \ | \ \a_i \x = b_i\}$
+	be the set of indices of the constraints that are ``tight'', i.e.,
+	satisfied with equality (we include non-negativity constraints here).  We call $\x \in \R^n$ a {\em basic point}
+	if $\rank(A_{I(x)}) = n$.  If $\x$ is a basic point and feasible, we
+	call it a {\em basic feasible solution} or simply a {\em basic
+		solution}.
+\end{definition}
+We can define the same concept for minimization programs. \\
+
+We say a set $C \subseteq V$ is a minimal vertex cover of $G = (V,E)$ if 
+(1) it is a vertex cover and (2) it is minimal, i.e., for every $u \in C$ the set
+$C \setminus \{u\}$ is not a vertex cover anymore.
+
+\begin{problem}{4}
+	\statement
+     Let $G$ be a bipartite graph.
+    Show that $\y \in \R^{V}$ is a basic solution of ${\rm VCLP}(G)$ if and only if 
+    (1) $y_u \in \{0,1\}$ for all $u \in V$ and (2) the set $C := \{u \in V \ | \ y_u = 1\}$ is a 
+    minimal vertex cover.
+    
+    \solution
+    
+\end{problem}
+
+\textbf{Hint.} Suppose $e_1,\dots,e_k$ form a cycle in $G$. Note that every edge corresponds
+to a constraint of the VCLP, and thus this cycle corresponds to a submatrix $A_I$ with
+$|I|= k$. Show that the $k$ rows of $A_I$ are linearly dependent. 
+
+\textbf{Hint.} Suppose $C$ is a minimal vertex cover. Let $F$ be the set of ``tight'' edges, i.e., 
+the edges $e \in E$ incident to exactly one $u \in C$. What does minimality of $C$ say 
+about the relation between $C$ and $F$? Does this help you to show that the set
+of tight constraints of VCLP has rank $n$?
+
+\textbf{Hint.} Conversely, suppose $\y$ is a basic solution. Look at the vertices
+$u$ with $y_0 = 0$ and the ``tight edges'', those $e = \{u,v\}$ for which $y_u + y_v = 1$.
+\end{document}
