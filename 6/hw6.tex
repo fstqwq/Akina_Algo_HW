@@ -83,9 +83,9 @@ vice versa. However, every $\x \in \sol(\textrm{MLP}(G)) \cap \{0,1\}^E$ does.
 
 \begin{problem}{2}
   \statement
- We know that $\nu(G) = \tau(G)$ for all bipartite graphs (K\H{o}nig's Theorem) and
- $\nu(G) \leq \tau(G)$ for all graphs (since every matched edge must be covered
- by a distinct vertex). Show that $\tau(G) \leq 2 \, \nu(G)$ for all graphs $G$.   
+ We know that $\nu(G) = \tau(G)$ for all bipartite graphs 
+        and $\nu(G) \leq \tau(G)$ for all graphs (since every matched edge must
+        be covered by a distinct vertex). Show that $\tau(G) \leq 2 \nu(G)$ for all graphs G.
   
   \solution
   
@@ -126,55 +126,23 @@ vice versa. However, every $\x \in \sol(\textrm{MLP}(G)) \cap \{0,1\}^E$ does.
 
 
 
-\textbf{Basic Solutions.} Recall our definition of basic solutions.
-Let $P$ be the following linear program.
-\begin{align*}
-P: \qquad
-\begin{array}{lrl}
-\textnormal{maximize} \quad & \multicolumn{2}{l}{\mathbf{c}^T \x} \\
-\textnormal{subject to} \quad & A\x & \leq \b \ 
-\end{array}
-\end{align*}
-where we translated the constraint $\x \geq 0$ into $n$ constraints
-$-x_i \leq 0$ and integrated them into $A$, so 
-the $n$ last rows of $A$ form the 
-negative identity matrix $-I_n$. We introduce some notation: $\a_i$ is the $\nth{i}$ row of $i$;
-for $I \subseteq [m+n]$ let $A_I$ be the matrix
-consisting of the rows $\a_i$ for $i \in I$.
-\begin{definition}
-	For $\x \in \R^n$ let $I(\x) := \{i \in [m+n] \ | \ \a_i \x = b_i\}$
-	be the set of indices of the constraints that are ``tight'', i.e.,
-	satisfied with equality (we include non-negativity constraints here).  We call $\x \in \R^n$ a {\em basic point}
-	if $\rank(A_{I(x)}) = n$.  If $\x$ is a basic point and feasible, we
-	call it a {\em basic feasible solution} or simply a {\em basic
-		solution}.
-\end{definition}
-We can define the same concept for minimization programs. \\
-
-We say a set $C \subseteq V$ is a minimal vertex cover of $G = (V,E)$ if 
-(1) it is a vertex cover and (2) it is minimal, i.e., for every $u \in C$ the set
-$C \setminus \{u\}$ is not a vertex cover anymore.
 
 \begin{problem}{4}
 	\statement
-     Let $G$ be a bipartite graph.
-    Show that $\y \in \R^{V}$ is a basic solution of ${\rm VCLP}(G)$ if and only if 
-    (1) $y_u \in \{0,1\}$ for all $u \in V$ and (2) the set $C := \{u \in V \ | \ y_u = 1\}$ is a 
-    minimal vertex cover.
+    For a graph $G=(V, E),$ let $\tau(G)$ denote the size of a minimum vertex cover, and $\nu(G)$ the size of a maximum matching. Recall the two linear programs VCLP and MLP (see above). Let $\tau_{f}(G):=\operatorname{opt}(\mathrm{VCLP}(G))$ and $\nu_{f}(G):=\operatorname{opt}(\operatorname{MLP}(G)) .$ Note that
+		\[
+		\nu(G) \leq \nu_{f}(G)=\tau_{f}(G) \leq \tau(G)
+		\]
+		where the equality in the middle follows from Strong LP Duality. Also, if $G$ is bipartite, then equality holds throughout in (1). Let us say a graph $G$ is $V C L P$ exact if $\tau(G)=\tau_{f}(G),$ and $M L P$ exact if $\nu(G)=\nu_{f}(G) .$ As we already know, a bipartite graph $G$ is both VCLP exact and MLP exact. From now on, suppose that $G$ is not bipartite but $\tau(G)=\tau_{f}(G)$
+		
+		1. Give an example of such a graph $G$ that is not bipartite but still VCLP exact.
+		
+		2. Give an example of a graph $G$ that is MLP exact but not VCLP exact.
+		
+		3. Suppose $G$ is VCLP exact. Let $Y \subseteq V(G)$ be a minimum vertex cover. Let $x$ be an optimal solution of $\operatorname{MLP}(G) .$ Show that $x_{e}=0$ if $e \subseteq Y$ (i.e., if both endpoints of $e$ are in the cover)
+		
+		4. Show that such a graph $G$ has a matching of size $|Y|$, and thus is MLP exact, too.
     
     \solution
-    
 \end{problem}
-
-\textbf{Hint.} Suppose $e_1,\dots,e_k$ form a cycle in $G$. Note that every edge corresponds
-to a constraint of the VCLP, and thus this cycle corresponds to a submatrix $A_I$ with
-$|I|= k$. Show that the $k$ rows of $A_I$ are linearly dependent. 
-
-\textbf{Hint.} Suppose $C$ is a minimal vertex cover. Let $F$ be the set of ``tight'' edges, i.e., 
-the edges $e \in E$ incident to exactly one $u \in C$. What does minimality of $C$ say 
-about the relation between $C$ and $F$? Does this help you to show that the set
-of tight constraints of VCLP has rank $n$?
-
-\textbf{Hint.} Conversely, suppose $\y$ is a basic solution. Look at the vertices
-$u$ with $y_0 = 0$ and the ``tight edges'', those $e = \{u,v\}$ for which $y_u + y_v = 1$.
 \end{document}
