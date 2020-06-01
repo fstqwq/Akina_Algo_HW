@@ -105,6 +105,22 @@ vice versa. However, every $\x \in \sol(\textrm{MLP}(G)) \cap \{0,1\}^E$ does.
      Show that $\tau(G) \leq 2\, \opt(\textrm{VCLP}(G))$ for all graphs $G$ (including non-bipartite graphs).
   
     \solution
+    \begin{proof}
+      Start from a optimal solution $\y \in \sol(\textrm{VCLP}(G))$, we can simply construct a feasible solution $\y'$ for vertex cover, that 
+      $$ y'_u = \min\{1,\lfloor 2 \cdot y_u \rfloor\} ~ \forall u \in V$$
+      
+      Consdier any $\{u, v\} \in E$.
+      \begin{align*}
+        &y_u + y_v \geq 1, y_u, y_v \geq 0 \\
+      \Rightarrow& \max \{y_u, y_v\} \geq \frac 12 \\
+      \Rightarrow& y'_u + y'_v \geq \lceil \max \{2\cdot y_u, 2\cdot y_v\} \rceil \geq 1\end{align*}
+      
+      And since $\y'_u \in \{0, 1\}$, so $\y'$ is a feasible vertex cover solution. Condiser the value of $\y'$,
+      $$ \sum_{u \in G}y'_u \leq \sum_{u \in G} 2y_u = 2\, \opt(\textrm{VCLP}(G))$$
+      
+      Therefore $$\tau(G) \leq \sum_{u \in G}y'_u \leq  2\, \opt(\textrm{VCLP}(G))$$
+    
+    \end{proof}
     
 \end{problem}
 
