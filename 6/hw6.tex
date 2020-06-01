@@ -148,5 +148,39 @@ vice versa. However, every $\x \in \sol(\textrm{MLP}(G)) \cap \{0,1\}^E$ does.
 		4. Show that such a graph $G$ has a matching of size $|Y|$, and thus is MLP exact, too.
     
     \solution
+    
+    \begin{figure}[htbp]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+	\centering
+	\includegraphics{figures/T4-1.png}
+	\caption{a VCLP exact non-bipartite graph}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+	\centering
+	\includegraphics{figures/T4-2.png}
+	\caption{a MLP exact but not VCLP exact graph}
+	\end{minipage}
+	\end{figure}
+
+		1. $G_1$ in figure 1 is not a bipartite graph. $\tau(G_1)=2$, while $\tau(G_1)\geq \tau_{f}(G_1)=(y_1+y_2)+(y_3+y_4)\geq 2$, so $G_1$ is still VCLP exact.
+		
+		2. For $G_2$ in figure 2, $\tau(G_2）=3$,  $\nu(G_2)=2$, and $\nu_{f}(G_2)=\tau_{f}(G_2)=2\ (y_1=y_2=y_3=y_4=0.5)$. 
+		Therefore $\nu(G_2)=\nu_f(G_2)$ and $\tau(G_2)<\tau_f(G_2)$, $G_2$ is MLP exact but not VCLP exact.
+		
+		3.Define $y$ as follows:$y_u=0$ for $u\in V/Y$, $y_v=\sum\x_e$ for $v\in Y$ and $e=(u,v)$.
+		If $\exists e\subseteq Y\ x_e>0$, then $x_e$ is added twice in $|y|$,so $|y|>|x|$.
+		And because $x$ is an optimal solution of $\operatorname{MLP}(G)$ and $G$ is VCLP exact, $|x|=\nu_{f}(G)=\tau_{f}(G)=\tau(G)$
+		It means among $|Y|=\tau(G)$ vertices there's at least 1 vertex with $y_{v'}>1$, implies that $\sum\x_e>1$ for $e=(u,v')$, which is a contradiction.
+		
+		4. $V$ can be divided to $Y$ and $V/Y$. 
+		For subset $A\subset Y$, denote$B\subset V/Y$ as the neighbour of $A$.
+		If $|B|<|A|$, because for $u\in a$,$y_u=1$, changing $y_u$ to $1-\epsilon(0<\epsilon<0.5)$ for $u\in A$and $y_v$ to $\epsilon$ for $v\in B$. $V$ after changing still satisfies $y_u+y_v\geq 1$ and is a smaller solution of VCLP,which is a contradiction.
+		 
+		So $Y$ and $V/Y$ is a bipartite graph ignoring edges in $Y$ and $V/Y$, and applying Hall's theorem we find a matching of size $|Y|$. 
+		Because $\nu(G)\geq|Y|=\tau(G)$ and $\nu(G) \leq \nu_{f}(G)=\tau_{f}(G) \leq \tau(G)$, then we have $\nu(G)=\nu_f(G)$. 
+		So $G$ is MLP exact.
+		 
+	
 \end{problem}
 \end{document}
