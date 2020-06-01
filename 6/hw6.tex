@@ -78,6 +78,10 @@ vice versa. However, every $\x \in \sol(\textrm{MLP}(G)) \cap \{0,1\}^E$ does.
    $\nu(G) = \val(\textrm{MLP}(G))$ for all {\em bipartite} graphs $G$.
    
     \solution
+    Let $\mathbf{x}$ be an optimal solution of $\mathrm{MLP}(G)$. If $\mathbf{x} \in \{0,1\}^E$, then we get that $v(G) = \val(\mathrm{MLP}(G))$. Else there is a non-empty edge set $E':=\{e \in E : 0 < x_e < 1\}$.\\
+    If there's no circle in $E'$, then $E'$ is a forest. Therefore for any two leaf node $u$,$v$ in a tree, there must be a path $P$ between them. Order edges in $P$ from $u$ to $v$ by $1$ to the length of path $n$. Denote the smallest in $1-x_{e_{2k-1}}$ and $x_{e_{2k}}$ as $c$ for all the $1 \leq 2k - 1 \leq n$ and $1 \leq 2k \leq n$. Construct a $\mathbf{x'}$ by add $c$ to $e_{2k-1}$ and subtract $c$ from $e_{2k}$. $\mathbf{x'}$ must give a solution as better as $\mathbf{x}$ with more integer edges. It's still a forest, so we can apply it until $E'$ is empty.\\
+    If there's circle in $E'$, then it must be a circle with even edges. Dealing the circle with similar method above, we can get a solution as better as $\mathbf{x}$ with more integer edges. The number of circle will reduce, so it will finally become the case above after applying it repeatedly.\\
+    Therefore, we can get a integer solution at last, which can be correspond to a match. Therefore $v(G) \geq \val(\mathrm{MLP}(G))$, so $v(G) = \val(\mathrm{MLP}(G))$.
     
 \end{problem}
 
