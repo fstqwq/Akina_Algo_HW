@@ -89,6 +89,14 @@ vice versa. However, every $\x \in \sol(\textrm{MLP}(G)) \cap \{0,1\}^E$ does.
   
   \solution
   
+  Let \(M\) be a maximum matching of graph \(G\) and \(W := \{u, v | \{u, v\} \in M\}\). There is no such edge \(\{u, v\} \in E \setminus M\) satisfying that \(u\) and \(v\) both in \(V \setminus W\), otherwise \(\{u, v\}\) should be in \(M\). Therefore there are two types of edges in \(E \setminus M\):
+  
+  \begin{itemize}
+  	\item \(\{u, v\}\) which \(u, v\) are all \(\in W\)
+  	\item \(\{u, v\}\) which only one of \(u\) and \(v\) \(\in W\)
+  \end{itemize}
+
+	So, \(W\) is a vertex cover, and \(|W| = 2\nu(G)\), hence \(\tau(G) \leq |W| \leq 2\nu(G)\).
 \end{problem}
 
 
