@@ -64,7 +64,51 @@
   want to prove and what you can assume.
     
     \solution
+	Proof from (1) to (3) is:
 	
+	Define $A'=\begin{bmatrix}A\\-A\\-1\end{bmatrix}$,
+	$b'=\begin{bmatrix}b\\-b\\0\end{bmatrix}$,
+	$y'=\begin{bmatrix}y_1\\y_2\\z\end{bmatrix}$,then:
+	$$	
+	\begin {align*}
+	(\neg\exists x\geq 0:Ax=b)
+	& \Longleftrightarrow (\neg\exists x\geq 0:Ax\leq b,-Ax\leq -b,-x\leq 0)\\
+	& \Longleftrightarrow (\neg\exists x\geq 0:A'x\leq b)\\
+	& \Longleftrightarrow (\exists y'\geq 0:y'^TA'=0,y'^Tb'<0)\\
+	& \Longleftrightarrow (\exists y_1,y_2,z\geq 0:(y_1^T-y_2^T)A'-z=0,(y_1^T-t_2^T)b<0)\\
+	& \Longleftrightarrow (\exists z\geq 0,y:y'^TA'=z,y^Tb<0)\\
+	& \Longleftrightarrow (\exists y\geq 0,y:y'^TA'\geq 0,y^Tb<0)	
+	\end {align*}
+	$$
+	
+	Proof from (3) to (2) is:
+	
+	Define $A'=\begin{bmatrix}A & 1\end{bmatrix}$,
+	$x'=\begin{bmatrix}x\\z\end{bmatrix}$,then:
+	$$	
+	\begin {align*}
+	(\neg\exists x\geq 0:Ax\leq b)
+	& \Longleftrightarrow (\neg\exists x,z\geq 0:Ax+z=b)\\
+	& \Longleftrightarrow (\neg\exists x\geq 0:A'x'=b)\\
+	& \Longleftrightarrow (\exists y:y^TA'\geq 0,y^Tb<0)\\
+	& \Longleftrightarrow (\exists y\geq 0:y^TA\geq q0,y^Tb<0)
+	\end {align*}
+	$$
+	
+	Proof from (2) to (1) is:
+	
+	Define $A'=\begin{bmatrix}A & -A\end{bmatrix}$,
+	$x'=\begin{bmatrix}x_1\\x_2\end{bmatrix}$,then:
+	$$	
+	\begin {align*}
+	(\neg\exists x:Ax\leq b)
+	& \Longleftrightarrow (\neg\exists x_1,x_2\geq 0:A(x_1+x_2)\leq b)\\
+	& \Longleftrightarrow (\neg\exists x'\geq 0:A'x'\leq b)\\
+	& \Longleftrightarrow (\exists y\geq 0:y^TA'\geq 0,y^Tb<0)\\
+	& \Longleftrightarrow (\exists y\geq 0:y^TA\geq 0,-y^TA\geq 0,y^Tb<0)\\
+	& \Longleftrightarrow (\exists y\geq 0:y^TA= 0,y^Tb<0)
+	\end {align*}
+	$$
 \end{problem}
 
 \subsection{A Linear Program for, well, for what?}
