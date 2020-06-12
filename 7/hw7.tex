@@ -64,7 +64,7 @@
   want to prove and what you can assume.
     
     \solution
-
+	
 \end{problem}
 
 \subsection{A Linear Program for, well, for what?}
@@ -169,18 +169,44 @@ the inflow at $v$ should equal the outflow.
 	& z_v\in R,\forall v\in V\setminus s 
 	\end {align*}
 	$$
+	Then define the new $z_v=z_v+z_s$, it turns to:
+	$$
+	\begin {align*}
+	\text{maximize } & z_t-z_s \\
+	\text{subject to } & z_v-z_u\leq c(e),\forall e=(u,v)\\
+	& z_v\in R,\forall v\in V 
+	\end {align*}
+	$$
 \end{problem}
 \begin{problem}{4}
 	\statement
    Interpret the dual. Show that it is the LP formulation of a ``natural'' maximization problem on $G$.
    \solution
-	
+	For every vertex $v\in V$, give a real value $z_v$ so that for every $e=(u,v)$ holds $z_v-z_u\leq c(e)$. The target is to maxmize the difference of $z_s$ and $z_t$.
 \end{problem}
 \begin{problem}{5}
 	\statement
   Describe an optimal solution of the dual program.
     \solution
-	
+	An optimal solution is:
+	\begin{equation}
+	f_v=
+	\begin{cases}
+	0& v=s\\
+	\text{length of the shortest path from s to v}&v\neq s
+	\end{cases}
+	\end{equation}
+	It satisfies the conditions of $f_v-f_u\leq c(e),\forall e=(u,v)$ and $f_v\in R,\forall v\in V$, so $f$ is a solution.
+	Assume a shortest path $P=(e_1,e_2,\cdots,e_n)$ from $s$ to $t$,with vertices$(s,v1,v2,\cdots,t)$ then:
+	$$
+	\begin {align*}
+	z_t-z_s&=(z_t-z_vn-1)+(z_vn-1-z_vn-2)+\cdots+(z_v1-z_s)\\
+	&\leq c(e_1)+c(e_2)+\cdots+c(e_n)\\
+	&=\text{length of the shortest path from s to t}\\
+	&= f(t)-f(s)
+	\end {align*}
+	$$
+	So $f$ is optimal.
 \end{problem}
 
 
