@@ -1,0 +1,187 @@
+\documentclass[11pt,a4paper,oneside]{article}
+\usepackage[dvipsnames, svgnames, x11names]{xcolor}
+\usepackage{euler,amssymb,amsthm,amsmath,amsfonts,graphicx,epigraph,indentfirst,enumerate,comment,listings,fontspec,color,subcaption,listings}
+\usepackage{xeCJK}
+\usepackage{hw}
+\usepackage{pythonhighlight}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+
+
+\newcommand{\rank}{\textnormal{rank}}
+\newcommand{\y}{\mathbf{y}}
+\renewcommand{\c}{\mathbf{c}}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\z}{\mathbf{z}}
+\renewcommand{\u}{\mathbf{u}}
+\newcommand{\V}{\mathbf{v}}
+\renewcommand{\a}{\mathbf{a}}
+\renewcommand{\b}{\mathbf{b}} 
+\newcommand{\zero}{\mathbf{0}}
+\newcommand{\rpn}{\mathbb{R}_{\geq 0}}
+\newcommand{\sol}{\textup{\textrm{sol}}}
+\newcommand{\opt}{\textup{\textrm{opt}}}
+
+\newtheorem{theorem}{Theorem}
+\newcommand{\nth}[1]{#1\textsuperscript{th}}
+\newcommand{\E}{\mathop{\mathbb{E\/}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\norm}[1]{\|#1\|}
+
+
+\renewcommand{\hwtitle} {CS217 Homework 7, First Submission}	
+\renewcommand{\hwauthor}{Akina}
+\renewcommand{\hwdate}{\today}
+
+\begin{document}
+\title{\hwtitle}
+\author{\hwauthor}
+\date{\hwdate}
+\maketitle
+
+
+\section{Farkas Lemma and LP Duality}
+
+\subsection{Different Versions of Farkas Lemma}
+
+\begin{problem}{1}
+	\statement
+ Show that the three versions of Farkas Lemma presented in class are all equivalent (I actually did not present
+ the third version in class):
+ \begin{align}
+   ( \neg \exists \x : \, A \x \leq \b ) \, & \Longleftrightarrow 
+    ( \exists \y \geq \zero : \, \y^T A = \zero, \,     \y^T \b < 0 ) \ . \\
+      ( \neg \exists \x \geq \zero : \, A \x \leq \b ) \, & \Longleftrightarrow 
+    ( \exists \y \geq \zero : \, \y^T A \geq \zero, \,  \y^T \b < 0 ) \ . \\
+   ( \neg \exists \x \geq \zero : \, A \x = \b ) \, & \Longleftrightarrow 
+    ( \exists \y \begingroup \color{white} \geq \zero \endgroup : \, \y^T A \geq \zero, \,  \y^T \b < 0 ) \ .
+ \end{align}
+  Note that the direction ``$\Longleftarrow$'' is easy in each case. 
+  We will show the ``$\Longrightarrow$'' of (1) in class using a technique called {\em Fourier-Motzkin Elimination}. 
+  This exercise is actually not that hard. The hardest part is keeping track of what you 
+  want to prove and what you can assume.
+    
+    \solution
+
+\end{problem}
+
+\subsection{A Linear Program for, well, for what?}
+
+Let $G = (V,E)$ be a directed graph, $s,t \in V$,  and $c: E \rightarrow \mathbf{R}^+$ be a cost 
+function. We want to find an $s-t$-flow $f$ of value $1$. Every edge $e$ generates cost $f(e) \cdot c(e)$, and we want to minimize the overall cost. There are no capacity constraints.
+We can easily write this as a linear program MCF (Minimum Cost Flow):
+\begin{align*}
+  \textrm{MCF}(G,s,t,c): \qquad
+  \begin{array}{ll}
+    \textnormal{minimize} \quad & \multicolumn{1}{l}{\sum_{e \in E} c(e) f(e)} \\
+    \\
+    \textnormal{subject to} \quad & \sum_{v \in V} f(v,t)  = 1 \\
+					        & \sum_{u \in V} f(u,v) - \sum_{w \in V} f(v,w)  = 0  \quad \forall\ v \in V  \setminus \{s,t\}\\
+					        \\
+     & f(e)  \geq 0 \ \forall \ e \in E 
+  \end{array}
+\end{align*}
+Note that we have $m$ variables, one variable $f(e)$ for each edge $e$.
+The first constraint says that the value of the flow should be 1. The other constraints say that 
+the inflow at $v$ should equal the outflow.
+
+\begin{problem}{2}
+	\statement
+   Let $d$ be the shortest path distance from $s$ to $t$ in the directed graph $G$, where distance
+   means sum of the $c(e)$ along the path. Show that $\opt(MCF) = d$.
+   \textbf{Hint.} Make sure you show both $\leq$ and $\geq$.
+    \solution
+	To prove $d\geq \opt(MCF)$, first assume a shortest path $P$ in $G$.We have: 
+	$$\sum_{e \in P} c(e)=d$$
+	Then we define $f$ :
+	\begin{equation}
+	f(e)=
+	\begin{cases}
+	1& e\in P\\
+	0& e\notin P
+	\end{cases}
+	\end{equation}
+	So $f$ is a solution of $MCF$ and $d=val(f)\geq \opt(MCF)$.
+	
+	To prove $d\leq \opt(MCF)$,first assume a flow $f_0$ with $val(f_0)=\opt(MCF)$.
+	Every time pick an edge$(u_0,v_0)$ with $f_0(u_0,v_0)>0$ but is minimal. 
+	Because $f_0$ is a flow, there exist a path $P_1$ from $s$ to $t$ including $(u_0,v_0)$, which can be found with searching.
+	Because $\forall ef_0(e)\geq f_0(u_0,v_0)$, all edges on $P_1$ has at least $f_0(u_0,v_0)$.
+	Then generate a new flow $f_1$:
+	\begin{equation}
+	f_1(e)=
+	\begin{cases}
+	f_0(e)-f_0(u_0,v_0)& e\in P_1\\
+	f_0(e)& e\notin P_1
+	\end{cases}
+	\end{equation}
+	Because $P$ is a path and $f_0(e)\geq f(u_0,v_0)$, $f_1$ is still a flow but with $\sum_{v \in V} f_1(v,t) = 1-f_0(u_0,v_0)$.
+	Notice that $f_1(u,v)=0$, then the edges included in $f_1$ is decreased by at least 1, so this procedure can terminate in finite times.
+	By this way $f_0$ is divided into many path $P_i$ with their weight 
+	$w_i=f_{i-1}(u_{i-1},v_{i-1})$ , and $\sum w_i=1$. 
+	Because for every path $d\leq dis(P)=w*\sum_{e \in P} c(e)$,there is:
+	$$	
+	\begin {align*}
+	\opt(MCF)&=val(f_0)\\
+			&=val(f_1)+w_1*\sum_{e \in P_1} c(e)\\
+			&=\cdots\\
+			&=\sum (w_i*\sum_{e \in P_i} c(e))\\
+			&\geq \sum(w_i*d)\\
+			&=d
+	\end {align*}
+	$$
+	So $d\leq \opt(MCF)$.
+\end{problem}
+
+\begin{problem}{3}
+	\statement
+    Write down the dual of MCF. This will be a maximization problem. Don't use any matrix notation.
+    \solution
+    The original LP form is:
+	$$	
+	\begin {align*}
+	\text{minimize } & \sum_{e\in E}c(e)f(e) \\
+	\text{subject to } & \sum_{e\in E,e=(u,t)}f(e)\geq 1 \\
+	& \sum_{e\in E,e=(u,t)}-f(e)\leq -1 \\
+	& \sum_{e\in E,e=(u,v)}f(e)-\sum_{e\in E,e=(v,w)}f(e)\geq 0, 
+	\forall v\in V\setminus \{s,t\} \\
+	& \sum_{e\in E,e=(v,w)}f(e)-\sum_{e\in E,e=(u,v)}f(e)\geq 0, 
+	\forall v\in V\setminus \{s,t\} 
+	\end {align*}
+	$$
+	Then the dual is:
+	$$
+	\begin {align*}
+	\text{maximize } & y_t^+-y_t^- \\
+	\text{subject to } & (y_v^+-y_v^-)-(y_u^+-y_u^-)\leq c(e),\forall e=(u,v),u\neq s\\
+	& (y_v^+-y_v^-)\leq c(e),\forall e=(s,v)\\
+	& y_v^+,y_v^-\geq 0,\forall v\in V\setminus s 
+	\end {align*}
+	$$
+	It can be simplified to:
+	$$
+	\begin {align*}
+	\text{maximize } & z_t \\
+	\text{subject to } & z_v-z_u\leq c(e),\forall e=(u,v),u\neq s\\
+	& z_v\leq c(e),\forall e=(s,v)\\
+	& z_v\in R,\forall v\in V\setminus s 
+	\end {align*}
+	$$
+\end{problem}
+\begin{problem}{4}
+	\statement
+   Interpret the dual. Show that it is the LP formulation of a ``natural'' maximization problem on $G$.
+   \solution
+	
+\end{problem}
+\begin{problem}{5}
+	\statement
+  Describe an optimal solution of the dual program.
+    \solution
+	
+\end{problem}
+
+
+\end{document}
