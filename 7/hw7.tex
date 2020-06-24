@@ -31,7 +31,7 @@
 \newcommand{\norm}[1]{\|#1\|}
 
 
-\renewcommand{\hwtitle} {CS217 Homework 7, First Submission}	
+\renewcommand{\hwtitle} {CS217 Homework 7, Final Submission}	
 \renewcommand{\hwauthor}{Akina}
 \renewcommand{\hwdate}{\today}
 
@@ -69,8 +69,7 @@
 	Define $A'=\begin{bmatrix}A\\-A\\-1\end{bmatrix}$,
 	$b'=\begin{bmatrix}b\\-b\\0\end{bmatrix}$,
 	$y'=\begin{bmatrix}y_1\\y_2\\z\end{bmatrix}$,then:
-	$$	
-	\begin {align*}
+	\begin{align*}
 	(\neg\exists x\geq 0:Ax=b)
 	& \Longleftrightarrow (\neg\exists x\geq 0:Ax\leq b,-Ax\leq -b,-x\leq 0)\\
 	& \Longleftrightarrow (\neg\exists x\geq 0:A'x\leq b)\\
@@ -78,37 +77,32 @@
 	& \Longleftrightarrow (\exists y_1,y_2,z\geq 0:(y_1^T-y_2^T)A'-z=0,(y_1^T-t_2^T)b<0)\\
 	& \Longleftrightarrow (\exists z\geq 0,y:y'^TA'=z,y^Tb<0)\\
 	& \Longleftrightarrow (\exists y\geq 0,y:y'^TA'\geq 0,y^Tb<0)	
-	\end {align*}
-	$$
+	\end{align*}
 	
 	Proof from (3) to (2) is:
 	
 	Define $A'=\begin{bmatrix}A & 1\end{bmatrix}$,
 	$x'=\begin{bmatrix}x\\z\end{bmatrix}$,then:
-	$$	
-	\begin {align*}
+	\begin{align*}
 	(\neg\exists x\geq 0:Ax\leq b)
 	& \Longleftrightarrow (\neg\exists x,z\geq 0:Ax+z=b)\\
 	& \Longleftrightarrow (\neg\exists x\geq 0:A'x'=b)\\
 	& \Longleftrightarrow (\exists y:y^TA'\geq 0,y^Tb<0)\\
 	& \Longleftrightarrow (\exists y\geq 0:y^TA\geq q0,y^Tb<0)
-	\end {align*}
-	$$
+	\end{align*}
 	
 	Proof from (2) to (1) is:
 	
 	Define $A'=\begin{bmatrix}A & -A\end{bmatrix}$,
 	$x'=\begin{bmatrix}x_1\\x_2\end{bmatrix}$,then:
-	$$	
-	\begin {align*}
+	\begin{align*}
 	(\neg\exists x:Ax\leq b)
 	& \Longleftrightarrow (\neg\exists x_1,x_2\geq 0:A(x_1+x_2)\leq b)\\
 	& \Longleftrightarrow (\neg\exists x'\geq 0:A'x'\leq b)\\
 	& \Longleftrightarrow (\exists y\geq 0:y^TA'\geq 0,y^Tb<0)\\
 	& \Longleftrightarrow (\exists y\geq 0:y^TA\geq 0,-y^TA\geq 0,y^Tb<0)\\
 	& \Longleftrightarrow (\exists y\geq 0:y^TA= 0,y^Tb<0)
-	\end {align*}
-	$$
+	\end{align*}
 \end{problem}
 
 \subsection{A Linear Program for, well, for what?}
@@ -166,16 +160,14 @@ the inflow at $v$ should equal the outflow.
 	By this way $f_0$ is divided into many path $P_i$ with their weight 
 	$w_i=f_{i-1}(u_{i-1},v_{i-1})$ , and $\sum w_i=1$. 
 	Because for every path $d\leq dis(P)=w*\sum_{e \in P} c(e)$,there is:
-	$$	
-	\begin {align*}
+	\begin{align*}
 	\opt(MCF)&=val(f_0)\\
 			&=val(f_1)+w_1*\sum_{e \in P_1} c(e)\\
 			&=\cdots\\
 			&=\sum (w_i*\sum_{e \in P_i} c(e))\\
 			&\geq \sum(w_i*d)\\
 			&=d
-	\end {align*}
-	$$
+	\end{align*}
 	So $d\leq \opt(MCF)$.
 \end{problem}
 
@@ -184,8 +176,7 @@ the inflow at $v$ should equal the outflow.
     Write down the dual of MCF. This will be a maximization problem. Don't use any matrix notation.
     \solution
     The original LP form is:
-	$$	
-	\begin {align*}
+	\begin{align*}
 	\text{minimize } & \sum_{e\in E}c(e)f(e) \\
 	\text{subject to } & \sum_{e\in E,e=(u,t)}f(e)\geq 1 \\
 	& \sum_{e\in E,e=(u,t)}-f(e)\leq -1 \\
@@ -193,34 +184,27 @@ the inflow at $v$ should equal the outflow.
 	\forall v\in V\setminus \{s,t\} \\
 	& \sum_{e\in E,e=(v,w)}f(e)-\sum_{e\in E,e=(u,v)}f(e)\geq 0, 
 	\forall v\in V\setminus \{s,t\} 
-	\end {align*}
-	$$
+	\end{align*}
 	Then the dual is:
-	$$
-	\begin {align*}
+	\begin{align*}
 	\text{maximize } & y_t^+-y_t^- \\
 	\text{subject to } & (y_v^+-y_v^-)-(y_u^+-y_u^-)\leq c(e),\forall e=(u,v),u\neq s\\
 	& (y_v^+-y_v^-)\leq c(e),\forall e=(s,v)\\
 	& y_v^+,y_v^-\geq 0,\forall v\in V\setminus s 
-	\end {align*}
-	$$
+	\end{align*}
 	It can be simplified to:
-	$$
-	\begin {align*}
+	\begin{align*}
 	\text{maximize } & z_t \\
 	\text{subject to } & z_v-z_u\leq c(e),\forall e=(u,v),u\neq s\\
 	& z_v\leq c(e),\forall e=(s,v)\\
 	& z_v\in R,\forall v\in V\setminus s 
-	\end {align*}
-	$$
+	\end{align*}
 	Then define the new $z_v=z_v+z_s$, it turns to:
-	$$
-	\begin {align*}
+	\begin{align*}
 	\text{maximize } & z_t-z_s \\
 	\text{subject to } & z_v-z_u\leq c(e),\forall e=(u,v)\\
 	& z_v\in R,\forall v\in V 
-	\end {align*}
-	$$
+	\end{align*}
 \end{problem}
 \begin{problem}{4}
 	\statement
@@ -242,14 +226,12 @@ the inflow at $v$ should equal the outflow.
 	\end{equation}
 	It satisfies the conditions of $f_v-f_u\leq c(e),\forall e=(u,v)$ and $f_v\in R,\forall v\in V$, so $f$ is a solution.
 	Assume a shortest path $P=(e_1,e_2,\cdots,e_n)$ from $s$ to $t$,with vertices$(s,v1,v2,\cdots,t)$ then:
-	$$
-	\begin {align*}
+	\begin{align*}
 	z_t-z_s&=(z_t-z_vn-1)+(z_vn-1-z_vn-2)+\cdots+(z_v1-z_s)\\
 	&\leq c(e_1)+c(e_2)+\cdots+c(e_n)\\
 	&=\text{length of the shortest path from s to t}\\
 	&= f(t)-f(s)
-	\end {align*}
-	$$
+	\end{align*}
 	So $f$ is optimal.
 \end{problem}
 
